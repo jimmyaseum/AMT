@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/colorWhite"
+    app:cardCornerRadius="@dimen/_1sdp"
+    app:cardElevation="@dimen/_5sdp"
+    android:layout_margin="@dimen/_20sdp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radioPriceASC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:gravity="center_vertical"
+            android:text="Price: Low To High"
+            android:buttonTint="@color/colorBlack"
+            android:textColor="@color/colorBlack"
+            android:fontFamily="@font/poppins_regular"
+            android:textSize="@dimen/_13sdp"
+            android:padding="@dimen/_10sdp"
+            android:layoutDirection="rtl"
+            android:layout_gravity="start"
+            android:onClick="onRadioButtonClicked"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorLightGray"/>
+        <RadioButton
+            android:id="@+id/radioPriceDESC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:gravity="center_vertical"
+            android:text="Price: High To Low"
+            android:buttonTint="@color/colorBlack"
+            android:textColor="@color/colorBlack"
+            android:fontFamily="@font/poppins_regular"
+            android:textSize="@dimen/_13sdp"
+            android:padding="@dimen/_10sdp"
+            android:layoutDirection="rtl"
+            android:layout_gravity="start"
+            android:onClick="onRadioButtonClicked"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorLightGray"/>
+        <RadioButton
+            android:id="@+id/radioDurationASC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:gravity="center_vertical"
+            android:text="Duration: Low To High"
+            android:buttonTint="@color/colorBlack"
+            android:textColor="@color/colorBlack"
+            android:fontFamily="@font/poppins_regular"
+            android:textSize="@dimen/_13sdp"
+            android:padding="@dimen/_10sdp"
+            android:layoutDirection="rtl"
+            android:layout_gravity="start"
+            android:onClick="onRadioButtonClicked"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorLightGray"/>
+        <RadioButton
+            android:id="@+id/radioDurationDESC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:gravity="center_vertical"
+            android:text="Duration: High To Low"
+            android:buttonTint="@color/colorBlack"
+            android:textColor="@color/colorBlack"
+            android:fontFamily="@font/poppins_regular"
+            android:textSize="@dimen/_13sdp"
+            android:padding="@dimen/_10sdp"
+            android:layoutDirection="rtl"
+            android:layout_gravity="start"
+            android:onClick="onRadioButtonClicked"/>
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+

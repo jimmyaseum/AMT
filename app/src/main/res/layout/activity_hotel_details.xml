@@ -1,0 +1,1061 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/colorWhite">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:paddingLeft="@dimen/_10sdp"
+        android:paddingRight="@dimen/_10sdp">
+
+        <ImageView
+            android:id="@+id/imgBack"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_back_button"
+            app:srcCompat="@drawable/ic_keyboard_arrow_left"
+            app:tint="@color/colorBlack" />
+
+        <TextView
+            android:id="@+id/tbTvTitle"
+            style="@style/toolBarText"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="Hotel Voucher Details" />
+    </RelativeLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/_10sdp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/_1sdp"
+                app:cardElevation="@dimen/_8sdp"
+                app:cardBackgroundColor="#FFF8F8"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:outlineSpotShadowColor="@color/colorRed"
+                tools:targetApi="p">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_10sdp">
+
+                    <ImageView
+                        android:id="@+id/img"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_120sdp"
+                        android:scaleType="fitXY"
+                        android:visibility="gone"
+                        android:layout_gravity="center_horizontal"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <androidx.viewpager.widget.ViewPager
+                            android:id="@+id/viewPager"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_120sdp" />
+                        <com.viewpagerindicator.CirclePageIndicator
+                            android:id="@+id/pageIndicator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_20sdp"
+                            app:centered="true"
+                            app:fillColor="@color/colorWhite"
+                            app:pageColor="@color/colorLightGray"
+                            app:snap="false"
+                            android:layout_alignParentBottom="true"
+                            app:strokeWidth="0dp" />
+                    </RelativeLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:id="@+id/llStartView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="@dimen/_5sdp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_margin="@dimen/_4sdp">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_15sdp"
+                                    android:layout_height="@dimen/_15sdp"
+                                    android:src="@drawable/icon_hotel"/>
+
+                                <TextView
+                                    android:id="@+id/txtHotelName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:text=""
+                                    android:gravity="center_vertical"
+                                    android:textColor="@color/colorAccent"
+                                    android:textSize="@dimen/_13sdp"
+                                    android:layout_marginLeft="@dimen/_10sdp"/>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_4sdp">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_15sdp"
+                                    android:layout_height="@dimen/_15sdp"
+                                    android:src="@drawable/icon_location"/>
+
+                                <TextView
+                                    android:id="@+id/txtHotelAddress"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:text=""
+                                    android:gravity="center_vertical"
+                                    android:textColor="@color/gray"
+                                    android:textSize="@dimen/_10sdp"
+                                    android:layout_marginLeft="@dimen/_10sdp"/>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_margin="@dimen/_4sdp">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_15sdp"
+                                    android:layout_height="@dimen/_15sdp"
+                                    android:src="@drawable/icon_booking_no"/>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:text="Booking No : "
+                                    android:gravity="center_vertical"
+                                    android:textColor="@color/gray"
+                                    android:textSize="@dimen/_10sdp"
+                                    android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                <TextView
+                                    android:id="@+id/txtHotelBokingNo"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="2"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:text=""
+                                    android:gravity="center_vertical"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/_10sdp"
+                                    android:layout_marginLeft="@dimen/_10sdp"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_margin="@dimen/_4sdp">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_15sdp"
+                                    android:layout_height="@dimen/_15sdp"
+                                    android:src="@drawable/icon_phone"/>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:text="Mobile No : "
+                                    android:gravity="center_vertical"
+                                    android:textColor="@color/gray"
+                                    android:textSize="@dimen/_10sdp"
+                                    android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                <TextView
+                                    android:id="@+id/txtHotelMobileNo"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="2"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:text=""
+                                    android:gravity="center_vertical"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/_10sdp"
+                                    android:layout_marginLeft="@dimen/_10sdp"/>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_margin="@dimen/_4sdp"
+                                android:gravity="center_vertical">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_15sdp"
+                                    android:layout_height="@dimen/_15sdp"
+                                    android:src="@drawable/icon_night"/>
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:text="No of Nights : "
+                                    android:gravity="center_vertical"
+                                    android:textColor="@color/gray"
+                                    android:textSize="@dimen/_10sdp"
+                                    android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                <TextView
+                                    android:id="@+id/txtNoOfNights"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="0.7"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:text=""
+                                    android:gravity="center_vertical"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/_10sdp"
+                                    android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                <TextView
+                                    android:id="@+id/txtReadMore"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Read More"
+                                    android:drawablePadding="@dimen/_5sdp"
+                                    android:drawableTint="#0057DA"
+                                    android:drawableRight="@drawable/ic_keyboard_down"
+                                    android:fontFamily="@font/poppins_semibold"
+                                    android:textSize="@dimen/_11sdp"
+                                    android:textColor="#0057DA"
+                                    android:gravity="center_vertical"
+                                    android:layout_gravity="right"/>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/LL_More"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:visibility="gone">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_margin="@dimen/_4sdp">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_15sdp"
+                                        android:layout_height="@dimen/_15sdp"
+                                        android:src="@drawable/icon_room_type"/>
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text="Room Type : "
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/gray"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                    <TextView
+                                        android:id="@+id/txtHotelRoomType"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="2"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text=""
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/colorBlack"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_margin="@dimen/_4sdp">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_15sdp"
+                                        android:layout_height="@dimen/_15sdp"
+                                        android:src="@drawable/icon_meal_plan"/>
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text="Meal Plan : "
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/gray"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                    <TextView
+                                        android:id="@+id/txtHotelMealPlan"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="2"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text=""
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/colorBlack"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_margin="@dimen/_4sdp">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_15sdp"
+                                        android:layout_height="@dimen/_15sdp"
+                                        android:src="@drawable/icon_check_in"/>
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text="Check in : "
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/gray"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                    <TextView
+                                        android:id="@+id/txtHotelCheckIn"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="2"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text=""
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/colorBlack"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_margin="@dimen/_4sdp">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_15sdp"
+                                        android:layout_height="@dimen/_15sdp"
+                                        android:src="@drawable/icon_check_out"/>
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text="Check Out : "
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/gray"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                    <TextView
+                                        android:id="@+id/txtHotelCheckOut"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="2"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text=""
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/colorBlack"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_margin="@dimen/_4sdp">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_15sdp"
+                                        android:layout_height="@dimen/_15sdp"
+                                        android:src="@drawable/icon_book_by"/>
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text="Book By : "
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/gray"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                    <TextView
+                                        android:id="@+id/txtHotelBookBy"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="2"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text=""
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/colorBlack"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_margin="@dimen/_4sdp">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_15sdp"
+                                        android:layout_height="@dimen/_15sdp"
+                                        android:src="@drawable/icon_confirm_by"/>
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text="Confirm By : "
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/gray"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                    <TextView
+                                        android:id="@+id/txtHotelConfirmBy"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="2"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text=""
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/colorBlack"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_margin="@dimen/_4sdp"
+                                    android:gravity="center_vertical">
+
+                                    <ImageView
+                                        android:layout_width="@dimen/_15sdp"
+                                        android:layout_height="@dimen/_15sdp"
+                                        android:src="@drawable/icon_supplier"/>
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text="Supplier : "
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/gray"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                    <TextView
+                                        android:id="@+id/txtHotelSupplier"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="0.7"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/poppins_medium"
+                                        android:text=""
+                                        android:gravity="center_vertical"
+                                        android:textColor="@color/colorBlack"
+                                        android:textSize="@dimen/_10sdp"
+                                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                                </LinearLayout>
+                                <TextView
+                                    android:id="@+id/txtReadLess"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Read Less"
+                                    android:drawablePadding="@dimen/_5sdp"
+                                    android:drawableTint="#0057DA"
+                                    android:drawableRight="@drawable/ic_keyboard_up"
+                                    android:fontFamily="@font/poppins_semibold"
+                                    android:textSize="@dimen/_11sdp"
+                                    android:textColor="#0057DA"
+                                    android:gravity="center_vertical"
+                                    android:layout_gravity="right"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/_1sdp"
+                app:cardElevation="@dimen/_8sdp"
+                app:cardBackgroundColor="#EBF6FA"
+                android:outlineAmbientShadowColor="@color/colorgreenish400"
+                android:outlineSpotShadowColor="@color/colorgreenish400"
+                tools:targetApi="p"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_10sdp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="@dimen/_10sdp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_semibold"
+                                android:text="Manager Details"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_12sdp"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/colorLightGray"/>
+
+                            <TextView
+                                android:id="@+id/txtManagerName"
+                                android:layout_width="match_parent"
+                                android:layout_weight="1"
+                                android:layout_height="0dp"
+                                android:fontFamily="@font/poppins_medium"
+                                android:text="Ms. Aahana"
+                                android:gravity="top"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_12sdp"
+                                android:layout_marginTop="@dimen/_5sdp"/>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_5sdp"
+                        android:padding="@dimen/_10sdp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
+                            <ImageView
+                                android:layout_width="@dimen/_12sdp"
+                                android:layout_height="@dimen/_12sdp"
+                                android:src="@drawable/icon_mail"
+                                android:tint="@color/gray"/>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_medium"
+                                android:text="Email"
+                                android:textColor="@color/gray"
+                                android:textSize="@dimen/_10sdp"
+                                android:layout_marginLeft="@dimen/_10sdp"/>
+                            <TextView
+                                android:id="@+id/txtManagerEmail"
+                                android:layout_width="0dp"
+                                android:layout_weight="3"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_medium"
+                                android:text=""
+                                android:gravity="right"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_10sdp"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="@dimen/_3sdp">
+                            <ImageView
+                                android:layout_width="@dimen/_12sdp"
+                                android:layout_height="@dimen/_12sdp"
+                                android:src="@drawable/icon_phone"
+                                android:tint="@color/gray"/>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_medium"
+                                android:text="Phone"
+                                android:textColor="@color/gray"
+                                android:textSize="@dimen/_10sdp"
+                                android:layout_marginLeft="@dimen/_10sdp"/>
+                            <TextView
+                                android:id="@+id/txtManagerMobile"
+                                android:layout_width="0dp"
+                                android:layout_weight="3"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_medium"
+                                android:text=""
+                                android:gravity="right"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_10sdp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/_1sdp"
+                app:cardElevation="@dimen/_7sdp"
+                app:cardBackgroundColor="#F6ECF5"
+                android:outlineAmbientShadowColor="#FFDFE1"
+                android:outlineSpotShadowColor="#FFDFE1"
+                tools:targetApi="p"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_10sdp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="@dimen/_10sdp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_semibold"
+                                android:text="Guest Details"
+                                android:gravity="center_vertical"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_12sdp"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/colorLightGray"/>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvGuestList"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="true"
+                            android:orientation="vertical"
+                            android:nestedScrollingEnabled="false"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/adapter_guest_detail"
+                            android:focusableInTouchMode="true"
+                            android:overScrollMode="never" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>
+
+
+<!--
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/RR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/_10sdp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#F6F6EB">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/_10sdp">
+                        <ImageView
+                            android:id="@+id/img"
+                            android:layout_width="@dimen/_70sdp"
+                            android:layout_height="@dimen/_70sdp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/img1"
+                            android:layout_gravity="center_horizontal"/>
+                        <LinearLayout
+                            android:id="@+id/llStartView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:paddingLeft="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/txtHotelName"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/poppins_semibold"
+                                android:text="Mevadgarh"
+                                android:gravity="bottom"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_12sdp"/>
+
+                            <TextView
+                                android:id="@+id/txtRoomType"
+                                android:layout_width="match_parent"
+                                android:layout_weight="1"
+                                android:layout_height="0dp"
+                                android:fontFamily="@font/poppins_medium"
+                                android:text="Royal"
+                                android:gravity="top"
+                                android:textColor="@color/gray"
+                                android:textSize="@dimen/_10sdp"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:orientation="horizontal"
+                                android:gravity="bottom">
+                                <TextView
+                                    android:id="@+id/txtTotalNoOfRooms"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_regular"
+                                    android:text="2 rooms"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/_9sdp"/>
+                                <TextView
+                                    android:id="@+id/txtTotalNoOfPax"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_regular"
+                                    android:text=", 5 Adult"
+                                    android:textColor="@color/colorBlack"
+                                    android:layout_marginLeft="@dimen/_5sdp"
+                                    android:textSize="@dimen/_9sdp"/>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorLightGray"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_5sdp">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_regular"
+                                android:text="Check in"
+                                android:textColor="@color/gray"
+                                android:textSize="@dimen/_9sdp"/>
+                            <TextView
+                                android:id="@+id/txtCheckInDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_semibold"
+                                android:text="12/12/2022"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_9sdp"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="@dimen/_10sdp"
+                                android:layout_marginLeft="@dimen/_10sdp"
+                                android:src="@drawable/dotted"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_regular"
+                                android:text="Check out"
+                                android:textColor="@color/gray"
+                                android:textSize="@dimen/_9sdp"/>
+                            <TextView
+                                android:id="@+id/txtCheckOutDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_semibold"
+                                android:text="12/12/2022"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/_9sdp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_10sdp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="@dimen/_10sdp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginRight="@dimen/_10sdp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/poppins_semibold"
+                                    android:text="Manager Details"
+                                    android:gravity="bottom"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/_12sdp"/>
+                                <TextView
+                                    android:id="@+id/txtManagerName"
+                                    android:layout_width="match_parent"
+                                    android:layout_weight="1"
+                                    android:layout_height="0dp"
+                                    android:fontFamily="@font/poppins_medium"
+                                    android:text="Ms. Aahana"
+                                    android:gravity="top"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/_11sdp"/>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorLightGray"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginRight="@dimen/_10sdp"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="@dimen/_5sdp"
+                            android:layout_marginRight="@dimen/_5sdp"
+                            android:padding="@dimen/_10sdp">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:orientation="horizontal"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="@dimen/_80sdp"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_regular"
+                                    android:text="Email"
+                                    android:textColor="@color/gray"
+                                    android:textSize="@dimen/_9sdp"/>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_regular"
+                                    android:text="Check in"
+                                    android:gravity="right"
+                                    android:textColor="@color/gray"
+                                    android:textSize="@dimen/_9sdp"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:orientation="horizontal"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="@dimen/_80sdp"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_regular"
+                                    android:text="Phone"
+                                    android:textColor="@color/gray"
+                                    android:textSize="@dimen/_9sdp"/>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/poppins_regular"
+                                    android:text="Check in"
+                                    android:gravity="right"
+                                    android:textColor="@color/gray"
+                                    android:textSize="@dimen/_9sdp"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_130sdp">
+
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_alignParentLeft="true"
+                android:tint="@color/colorWhite"
+                android:src="@drawable/ic_circle" />
+
+            <ImageView
+                android:layout_width="@dimen/_250sdp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/dotted" />
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/ic_circle"
+                android:tint="@color/colorWhite"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@+id/RR"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:background="#FFF8F8">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Guest Details"
+            android:gravity="bottom"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_10sdp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            tools:listitem="@layout/adapter_guest_detail"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+        -->

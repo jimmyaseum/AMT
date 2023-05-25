@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <EditText
+        android:id="@+id/edtSearchCustomer"
+        style="@style/TextViewStyleRegular"
+        android:textSize="@dimen/_15sdp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/bg_rounded_corner"
+        android:drawableLeft="@drawable/ic_search"
+        android:drawablePadding="@dimen/_5sdp"
+        android:drawableTint="@color/gray8"
+        android:hint="Search"
+        android:imeOptions="actionSearch"
+        android:padding="@dimen/_5sdp"
+        android:layout_margin="@dimen/_5sdp"
+        android:visibility="gone"
+        android:textColorHint="@color/colorLightBlack" />
+
+    <!-- TODO: Update blank fragment layout -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvGroupList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Group Fragment"
+        android:textSize="@dimen/_20sdp"
+        android:textColor="@color/colorAccent"
+        tools:listitem="@layout/adapter_group"
+        android:fontFamily="@font/poppins_semibold"
+        android:layout_below="@+id/edtSearchCustomer"/>
+</RelativeLayout>
