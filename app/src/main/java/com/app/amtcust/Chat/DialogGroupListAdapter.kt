@@ -14,7 +14,6 @@ import java.util.*
 
 class DialogGroupListAdapter(private val mContext: Context, private val arrData: ArrayList<GroupMemberList>) : RecyclerView.Adapter<DialogGroupListAdapter.ViewHolder>() {
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.row_select, parent, false)
         return ViewHolder(view)

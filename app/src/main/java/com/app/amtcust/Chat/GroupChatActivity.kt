@@ -558,8 +558,6 @@ class GroupChatActivity : AppCompatActivity(), EasyPermissions.PermissionCallbac
                 loadingBar!!.dismiss()
             }
         }
-
-
     }
 
     private fun selectGroupDialog() {

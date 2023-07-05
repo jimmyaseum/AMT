@@ -144,7 +144,6 @@ public class ConversationActivity extends AppCompatActivity implements EasyPermi
                 SendMessage();
             }
         });
-
         SendFileBtn.setOnClickListener (new View.OnClickListener() {
             @Override
             public void onClick(View view) {
