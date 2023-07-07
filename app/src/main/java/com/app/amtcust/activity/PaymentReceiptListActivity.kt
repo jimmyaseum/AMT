@@ -57,6 +57,8 @@ class PaymentReceiptListActivity : BaseActivity(), View.OnClickListener, Recycle
 
         imgBack.setOnClickListener(this)
         tvRetry.setOnClickListener(this)
+        fabAddPayment.setOnClickListener(this)
+
     }
 
     override fun onClick(v: View?) {
@@ -71,6 +73,10 @@ class PaymentReceiptListActivity : BaseActivity(), View.OnClickListener, Recycle
                 } else {
                     showHideDesignView(3)
                 }
+            }
+            R.id.fabAddPayment -> {
+                val intent = Intent(this, AddPaymentReceipt::class.java)
+                startActivity(intent)
             }
         }
     }
