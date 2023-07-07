@@ -42,7 +42,8 @@ class SplashActivity : AppCompatActivity() {
     var dialog: Dialog? = null
     private var mAuth: FirebaseAuth? = null
 
-    // commited by jimmy latest test
+    // commited by jimmy latest 07/07/2023
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
