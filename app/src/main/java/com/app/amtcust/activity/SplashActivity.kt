@@ -41,6 +41,7 @@ class SplashActivity : AppCompatActivity() {
     private var mAuth: FirebaseAuth? = null
 
     // commited by jimmy latest 02/08/2023 on 3:34
+    // commited by Shubham latest 02/08/2023 on 3:36
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
