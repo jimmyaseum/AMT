@@ -1,6 +1,8 @@
 package com.app.amtcust.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app.amtcust.R
 import com.app.amtcust.interFase.RecyclerClickListener
 import com.app.amtcust.model.response.PaymentReceiptListModel
+import com.app.amtcust.utils.AppConstant
+import com.app.amtcust.utils.gone
+import com.app.amtcust.utils.isOnline
+import com.app.amtcust.utils.toast
+import com.app.amtcust.utils.visible
 import kotlinx.android.synthetic.main.adapter_payment_receipt_list.view.*
+import java.util.Locale
 
 class PaymentReceiptListAdapter(val context: Context?, private val arrData: ArrayList<PaymentReceiptListModel>, val recyclerClickListener: RecyclerClickListener) : RecyclerView.Adapter<PaymentReceiptListAdapter.ViewHolder>() {
 
@@ -59,6 +67,36 @@ class PaymentReceiptListAdapter(val context: Context?, private val arrData: Arra
 
             itemView.llStartView.setOnClickListener {
                 recyclerClickListener.onItemClickEvent(it, position, 112)
+            }
+
+            if(model[position].IsCreatedFromApp != null && model[position].IsCreatedFromApp!!) {
+
+                itemView.cardEdit.visible()
+
+                itemView.cardEdit.setOnClickListener {
+                    recyclerClickListener.onItemClickEvent(it, adapterPosition, 102)
+                }
+
+                if(model[position].ReceiptImage != null && model[position].ReceiptImage != "") {
+                    itemView.cardAttachment.setOnClickListener {
+                        if(isOnline(context)) {
+                            if(model[position].ReceiptImage!!.contains(".pdf")) {
+                                var format = "https://docs.google.com/gview?embedded=true&url=%s"
+                                val fullPath: String = java.lang.String.format(Locale.ENGLISH, format, model[position].ReceiptImage)
+                                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(fullPath))
+                                context.startActivity(browserIntent)
+                            } else {
+                                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(model[position].ReceiptImage))
+                                context.startActivity(browserIntent)
+                            }
+                        } else {
+                            context.toast(context.resources.getString(R.string.msg_no_internet), AppConstant.TOAST_SHORT)
+                        }
+                    }
+                } else {
+                    itemView.cardAttachment.gone()
+                }
+
             }
         }
     }

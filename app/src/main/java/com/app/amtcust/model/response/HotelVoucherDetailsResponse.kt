@@ -62,7 +62,9 @@ data class HotelVoucherDetailsModel
         @SerializedName("guestDetails")
         val guestDetails: ArrayList<GuestDetailsModel>?,
         @SerializedName("images")
-        val images: ArrayList<HotelImages>?
+        val images: ArrayList<HotelImages>?,
+        @SerializedName("HotelVoucherImage")
+        val HotelVoucherImage: String?
     )
 
 data class HotelImages (

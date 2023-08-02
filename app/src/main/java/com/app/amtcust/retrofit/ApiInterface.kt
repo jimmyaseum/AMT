@@ -237,5 +237,31 @@ interface ApiInterface {
     @POST("fcm/send")
     fun sendGroupNotification(@Body notification: PushGroupNotification): Call<PushNotification>
 
+    @POST("TourBooking/TourBookingPaxDetails")
+    fun getTourBookingPaxDetails(@Body body: RequestBody?): Call<TourBookingPaxResponse>
+
+    @Multipart
+    @POST("PaymentList/PaymentReceiptInsert") // done
+    fun AddPaymentReceipt(
+        @Part("BookingNo") BookingNo: RequestBody?,
+        @Part("PaymentFor") PaymentFor: RequestBody,
+        @Part("PaymentDate") PaymentDate: RequestBody?,
+        @Part("Amount") Amount: RequestBody?,
+        @Part("PaymentType") PaymentType: RequestBody?,
+        @Part ReceiptImage: ArrayList<MultipartBody.Part>?
+    ): retrofit2.Call<CommonResponse>
+
+    @Multipart
+    @POST("PaymentList/PaymentReceiptUpdate") // done
+    fun EditPaymentReceipt(
+        @Part("ID") ID: RequestBody?,
+        @Part("BookingNo") BookingNo: RequestBody?,
+        @Part("PaymentFor") PaymentFor: RequestBody,
+        @Part("PaymentDate") PaymentDate: RequestBody?,
+        @Part("Amount") Amount: RequestBody?,
+        @Part("PaymentType") PaymentType: RequestBody?,
+        @Part ReceiptImage: ArrayList<MultipartBody.Part>?
+    ): retrofit2.Call<CommonResponse>
+
 
 }

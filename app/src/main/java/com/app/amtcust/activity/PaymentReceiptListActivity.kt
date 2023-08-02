@@ -1,5 +1,6 @@
 package com.app.amtcust.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -75,8 +76,9 @@ class PaymentReceiptListActivity : BaseActivity(), View.OnClickListener, Recycle
                 }
             }
             R.id.fabAddPayment -> {
-                val intent = Intent(this, AddPaymentReceipt::class.java)
-                startActivity(intent)
+                val intent = Intent(this, AddPaymentReceiptActivity::class.java)
+                intent.putExtra("State","Add")
+                startActivityForResult(intent, 1001)
             }
         }
     }
@@ -120,9 +122,36 @@ class PaymentReceiptListActivity : BaseActivity(), View.OnClickListener, Recycle
 //                intent.putExtra("TourBookingNo",arrPaymentReceiptList[position].BookingNo)
                 startActivity(intent)
             }
+            102 -> {
+                val intent = Intent(this, AddPaymentReceiptActivity::class.java)
+                intent.putExtra("State","Update")
+                intent.putExtra("PRID",arrPaymentReceiptList[position].ID)
+                intent.putExtra("PDate",arrPaymentReceiptList[position].PaymentDate)
+                intent.putExtra("TBNO",arrPaymentReceiptList[position].BookingNo)
+                intent.putExtra("Amount",arrPaymentReceiptList[position].Amount.toString())
+                intent.putExtra("PRDocument",arrPaymentReceiptList[position].ReceiptImage)
+                intent.putExtra("PaymentFor",arrPaymentReceiptList[position].PaymentFor)
+                intent.putExtra("PaymentType",arrPaymentReceiptList[position].PaymentType)
+                startActivityForResult(intent, 1001)
+            }
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                1001 -> {
+                    if (isOnline(this)) {
+                        GetPaymentReceiptList()
+                    } else {
+                        showHideDesignView(3)
+                    }
+                }
+            }
+        }
+    }
 
     /*1st Parameter - type
  * 1 - RecyclerView visible and others are gone

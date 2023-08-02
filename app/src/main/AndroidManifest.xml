@@ -103,7 +103,7 @@
             android:exported="true"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activity.AddPaymentReceipt"
+            android:name=".activity.AddPaymentReceiptActivity"
             android:exported="false" />
         <activity
             android:name=".activity.FlightVoucherDetailActivity"

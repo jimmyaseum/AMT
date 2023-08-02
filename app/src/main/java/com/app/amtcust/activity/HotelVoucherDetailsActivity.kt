@@ -1,5 +1,7 @@
 package com.app.amtcust.activity
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import com.app.amtcust.R
 import com.app.amtcust.adapter.HotelImagePagerAdapter
@@ -8,6 +10,7 @@ import com.app.amtcust.model.response.HotelVoucherDetailsModel
 import com.app.amtcust.model.response.HotelVoucherDetailsResponse
 import com.app.amtcust.retrofit.ApiUtils
 import com.app.amtcust.utils.*
+import kotlinx.android.synthetic.main.activity_flight_details.LLViewDocument
 import kotlinx.android.synthetic.main.activity_hotel_details.*
 import kotlinx.android.synthetic.main.activity_hotel_details.card2
 import kotlinx.android.synthetic.main.activity_hotel_details.card3
@@ -27,6 +30,7 @@ class HotelVoucherDetailsActivity : BaseActivity() {
 //    var TourID: Int = 0
 //    var VoucherNo: String = ""
     var HotelVoucherID: Int = 0
+    var HotelDocument : String = ""
 
     var sharedPreference: SharedPreference? = null
 
@@ -60,6 +64,21 @@ class HotelVoucherDetailsActivity : BaseActivity() {
         }
 
         callDetailApi(/*HotelID , TourID , VoucherNo*/)
+        LLViewDocument.setOnClickListener {
+            if(isOnline(this)) {
+                if(HotelDocument.contains(".pdf")) {
+                    var format = "https://docs.google.com/gview?embedded=true&url=%s"
+                    val fullPath: String = java.lang.String.format(Locale.ENGLISH, format, HotelDocument)
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(fullPath))
+                    startActivity(browserIntent)
+                } else {
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(HotelDocument))
+                    startActivity(browserIntent)
+                }
+            } else {
+                toast(resources.getString(R.string.msg_no_internet), AppConstant.TOAST_SHORT)
+            }
+        }
     }
 
     private fun callDetailApi(/*hotelID: Int, tourID : Int,voucherNo: String*/) {
@@ -183,6 +202,13 @@ class HotelVoucherDetailsActivity : BaseActivity() {
             } else {
                 card3.gone()
             }
+        }
+
+        if(arrayList.HotelVoucherImage != null && arrayList.HotelVoucherImage != "") {
+            HotelDocument = arrayList.HotelVoucherImage
+            LLViewDocument.visible()
+        } else {
+            LLViewDocument.gone()
         }
     }
 

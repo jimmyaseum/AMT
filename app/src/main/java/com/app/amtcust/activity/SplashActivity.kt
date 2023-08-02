@@ -21,8 +21,6 @@ import com.app.amtcust.utils.PrefConstants.PREF_IS_LOGIN
 import com.app.amtcust.utils.PrefConstants.PREF_IS_WELCOME
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.iid.FirebaseInstanceId
 import org.json.JSONObject
 import retrofit2.Call

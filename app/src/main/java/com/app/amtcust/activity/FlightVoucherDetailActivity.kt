@@ -135,4 +135,5 @@ class FlightVoucherDetailActivity : BaseActivity() {
             LLViewDocument.gone()
         }
     }
+
 }

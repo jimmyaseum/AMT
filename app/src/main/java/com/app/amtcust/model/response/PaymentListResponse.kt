@@ -35,5 +35,11 @@ data class PaymentReceiptListModel (
     @SerializedName("BookBy")
     val BookBy: String?,
     @SerializedName("ApprovedByName")
-    val ApprovedByName: String?
+    val ApprovedByName: String?,
+    @SerializedName("PaymentType")
+    val PaymentType: String?,
+    @SerializedName("ReceiptImage")
+    val ReceiptImage: String?,
+    @SerializedName("IsCreatedFromApp")
+    val IsCreatedFromApp: Boolean? = false
 )

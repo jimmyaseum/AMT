@@ -18,12 +18,16 @@ data class UpcomingHotelModel (
     val HotelVoucherID: Int?,
     @SerializedName("TourID")
     val TourID: Int?,
+    @SerializedName("TourBookingNo")
+    val TourBookingNo: String?,
     @SerializedName("TourName")
     val TourName: String?,
     @SerializedName("HotelID")
     val HotelID: Int?,
     @SerializedName("HotelName")
     val HotelName: String?,
+    @SerializedName("HotelAddress")
+    val HotelAddress: String?,
     @SerializedName("HotelVoucher")
     val HotelVoucher: String?,
     @SerializedName("RoomTypeID")
@@ -39,7 +43,14 @@ data class UpcomingHotelModel (
     @SerializedName("CheckoutDate")
     val CheckoutDate: String?,
     @SerializedName("HotelImage")
-    val HotelImage: String?
+    val HotelImage: String?,
+
+    // Created From App AI005
+    @SerializedName("IsCreatedFromApp")
+    val IsCreatedFromApp: Boolean?,
+    @SerializedName("HotelVoucherImage")
+    val HotelVoucherImage: String?
+
 )
 
 
