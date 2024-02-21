@@ -18,6 +18,9 @@ data class TopTrendListModel(
     @SerializedName("SectorName")
     val SectorName: String? = null,
     @SerializedName("DestinationImage")
-    val DestinationImage: String? = null
+    val DestinationImage: String? = null,
+    @SerializedName("DestinationURL")
+    val DestinationURL: String? = null
+
 
 )

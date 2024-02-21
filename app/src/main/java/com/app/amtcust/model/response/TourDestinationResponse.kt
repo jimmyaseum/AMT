@@ -46,7 +46,9 @@ data class TourDestinationListModel (
     @SerializedName("OverallInclusions")
     val OverallInclusions: String?,
     @SerializedName("Rate")
-    val Rate: String?
+    val Rate: String?,
+    @SerializedName("TourCities")
+    val TourCities: String?
 
 )
 

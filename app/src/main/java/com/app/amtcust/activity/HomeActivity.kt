@@ -1,8 +1,10 @@
 package com.app.amtcust.activity
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
@@ -67,6 +69,14 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        // Check if the intent has the flag set
+        if (intent.flags and Intent.FLAG_ACTIVITY_CLEAR_TASK != 0) {
+            // Clear the back stack and replace the fragment with IndiaTourFragment
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.container, IndiaTourFragment())
+                .commit()
+        }
+
         mAuth = FirebaseAuth.getInstance()
         currentUser = mAuth!!.currentUser
         UsersRef = FirebaseDatabase.getInstance().reference.child(ChatConstant.F_USER)
@@ -82,6 +92,10 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         getSetting()
         initializeView()
+    }
+
+    override fun onBackPressed() {
+        backPressValidation()
     }
 
     override fun initializeView() {
@@ -142,7 +156,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
 
         //Default Home Fragment called first time
-          showHomeFragment()
+        showHomeFragment()
 /*
         var i = 1
         if(currentUser != null) {
@@ -195,6 +209,22 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         toolbar1?.tbImgRight!!.setOnClickListener(this)
     }
 
+    fun updateNavigationAndTitleForIndiaTour() {
+        // Update BottomSheetNavigation item
+        bottomNavigation.menu.findItem(R.id.nav_India)?.isChecked = true
+
+        // Update title
+        toolbar1.tbTvTitle?.text = "India Tours"
+    }
+
+    fun updateNavigationAndTitleForWorldTour() {
+        // Update BottomSheetNavigation item
+        bottomNavigation.menu.findItem(R.id.nav_World)?.isChecked = true
+
+        // Update title
+        toolbar1.tbTvTitle?.text = "World Tours"
+    }
+
     override fun onClick(v: View?) {
         hideKeyboard(this, v)
         when (v?.id) {
@@ -212,14 +242,11 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     private fun showHomeFragment() {
-
         toolbar1.tbTvTitle!!.text = "Explore"
         replaceFragment(ExploreFragment(), R.id.container, ExploreFragment::class.java.simpleName)
-
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         navigationView.menu.findItem(R.id.nav_Couple_Tours).isChecked = true
         showHideToolBarRightImage(false, 0)
-
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -302,6 +329,23 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
             }
         }
+    }
+
+    private fun backPressValidation() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Exit")
+        builder.setMessage("Are you sure you want to exit?")
+            .setCancelable(false)
+            .setPositiveButton("Yes") { dialog, id ->
+                // If user confirms exit
+                finish()
+            }
+            .setNegativeButton("No") { dialog, id ->
+                // If user cancels exit, do nothing
+                dialog.dismiss()
+            }
+        val alert = builder.create()
+        alert.show()
     }
 
     private fun callCustomerDetailApi(userId: Int) {

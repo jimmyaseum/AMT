@@ -40,8 +40,11 @@ interface ApiInterface {
     @GET("Relation/findall")
     fun getAllRelation(): Call<RelationResponse>
 
-    @POST("Sector/SectorByRegion")
-    fun getSectorList(@Body body: RequestBody?): Call<SectorListResponse>
+    /*@POST("Sector/SectorByRegion")
+    fun getSectorList(@Body body: RequestBody?): Call<SectorListResponse>*/
+
+    @GET("HomePage/GetDetinationList")
+    fun getSectorList(@Query("sectorType") sectorType: String): Call<SectorListResponse> // done
 
     @Multipart
     @POST("Customers/Insert") // done
@@ -164,11 +167,20 @@ interface ApiInterface {
     @GET("SpecialityType/FindAll")
     fun getSpecialityType(): Call<SpecialityResponse>
 
+    @GET("roomtypes/findall")
+    fun getRoomType(): Call<RoomTypeResponse>
+
+    @POST("Tour/SpecialityTourList")
+    fun getCoupleTourListFilter(@Body body: RequestBody?): Call<TourDestinationResponse>
+
     @POST("Tour/TourList")
     fun getTourListFilter(@Body body: RequestBody?): Call<TourDestinationResponse>
 
     @POST("Tour/TourDetails")
     fun getTourDetail(@Body body: RequestBody?): Call<TourDetailsResponse>
+
+    @POST("Tour/TourItineraryDownload")
+    fun getItineraryDownload(@Body body: RequestBody?): Call<TourDetailsResponse>
 
     @POST("TourBooking/MyTrips")
     fun getTourBookingList(@Body body: RequestBody?): Call<TourBookingResponse>

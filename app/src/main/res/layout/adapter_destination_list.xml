@@ -164,13 +164,16 @@
                         android:textColor="@color/colorBlack"
                         android:gravity="center" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvHotelData"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/txtRoomType"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:spanCount="3"
-                        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-                        tools:listitem="@layout/adapter_hotel_included"
+                        android:gravity="center_vertical"
+                        android:text=""
+                        android:buttonTint="@color/gray"
+                        android:textColor="@color/gray8"
+                        android:fontFamily="@font/poppins_regular"
+                        android:textSize="@dimen/_10sdp"
                         android:layout_marginLeft="@dimen/_5sdp"/>
 
                 </LinearLayout>
@@ -191,22 +194,13 @@
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text="-"
                         android:fontFamily="@font/poppins_regular"
                         android:textSize="@dimen/_10sdp"
                         android:textColor="@color/colorBlack"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:gravity="center_vertical" />
-                    <TextView
-                        android:id="@+id/txtCitiesCount"
-                        android:layout_width="@dimen/_40sdp"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:fontFamily="@font/poppins_semibold"
-                        android:textSize="@dimen/_15sdp"
-                        android:textColor="@color/colorBlack"
-                        android:layout_marginLeft="@dimen/_5sdp"
-                        android:gravity="center" />
+
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"

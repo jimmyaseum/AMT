@@ -47,7 +47,7 @@ class IndiaTourFragment : BaseFragment(), RecyclerClickListener {
 
     private fun GetSectorList() {
         launchProgress()
-        repo.getSectorList("1", listners = ResponseListner {
+        repo.getSectorList("domestic", listners = ResponseListner {
 
             if (it.status) {
                 if (it.data?.Status == 200) {
@@ -76,7 +76,7 @@ class IndiaTourFragment : BaseFragment(), RecyclerClickListener {
                 val intent = Intent(activity!!, DestinationListActivity::class.java)
                 intent.putExtra("REGIONID","")
                 intent.putExtra("TRAVELTYPE","TOUR")
-                intent.putExtra("SECTORID",arrSectorList[position].ID.toString())
+                intent.putExtra("SECTORURL",arrSectorList[position].DestinationURL.toString())
                 intent.putExtra("HIMALAYATREK","")
                 intent.putExtra("ISSEARCH","")
                 startActivity(intent)

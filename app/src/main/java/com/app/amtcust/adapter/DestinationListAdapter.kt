@@ -13,6 +13,7 @@ import com.app.amtcust.model.response.TourDestinationListModel
 import com.app.amtcust.utils.gone
 import com.app.amtcust.utils.loadUrlRoundedCorner2
 import kotlinx.android.synthetic.main.adapter_destination_list.view.*
+import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
 
@@ -38,13 +39,11 @@ class DestinationListAdapter(val context: Context?, private val arrData: ArrayLi
         return position
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), RecyclerClickListener {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var context: Context? = null
         var hotelP: ArrayList<HotelRoom>? = null
 
-        lateinit var adapterHotel: RoomTypeAdapter
-        lateinit var adapterFacility: FacilityAdapter
         fun bindItems(
             context: Context,
             position: Int,
@@ -88,47 +87,20 @@ class DestinationListAdapter(val context: Context?, private val arrData: ArrayLi
                 itemView.txtRateType.text = model.Ratetype
             }
 
-            hotelP = model.hotelroom
-            if(hotelP != null) {
-                if(hotelP!!.size > 0) {
-                    adapterHotel = RoomTypeAdapter(context, hotelP!!, this)
-                    itemView.rvHotelData.adapter  = adapterHotel
+            if(model.Rate != null) {
+                val indiaLocale = Locale("en", "IN")
+                val india: NumberFormat = NumberFormat.getCurrencyInstance(indiaLocale)
+                val amount = india.format(model.Rate?.toBigDecimal() ?: BigDecimal.ZERO)
 
-                    var minimum: Int = hotelP!![0].Rate!!.toDouble().toInt()
-                    var pos = 0
-                    for (i in 1 until hotelP!!.size-1) {
-                        if (minimum > hotelP!!.get(i).Rate!!.toDouble().toInt()) {
-                             minimum = hotelP!!.get(i).Rate!!.toDouble().toInt()
-                                pos = i
-                        }
-                    }
-                    adapterHotel.updateItemSingle(pos)
-
-                    val indiaLocale = Locale("en", "IN")
-                    val india: NumberFormat = NumberFormat.getCurrencyInstance(indiaLocale)
-                    val amount = india.format(hotelP!![pos].Rate!!.toBigDecimal())
-
-                    itemView.txtRate.text = amount + " /-"
-                }
+                itemView.txtRate.text = amount + " /-"
             }
 
-            var selectedcity = ""
-            val citiesName: ArrayList<String> = ArrayList()
-            val citiesP = model.toucities
-            if(citiesP != null) {
-                for(i in 0 until citiesP.size) {
-                    if(i < 3) {
-                        citiesName!!.add(citiesP[i].PlaceName!!)
-                    }
-                }
-                selectedcity = TextUtils.join(", ", citiesName)
+            if(model.RoomType != null) {
+                itemView.txtRoomType.text = model.RoomType
+            }
 
-                itemView.txtCities.text = selectedcity
-
-                if(model.Cities!! > 3) {
-                    val more = model.Cities!! - 3
-                    itemView.txtCitiesCount.text = "+ " + more
-                }
+            if(model.TourCities != null) {
+                itemView.txtCities.text = model.TourCities
             }
 
             if(model.toufacility.size > 0)
@@ -154,20 +126,5 @@ class DestinationListAdapter(val context: Context?, private val arrData: ArrayLi
             }
 
         }
-
-        override fun onItemClickEvent(view: View, position: Int, type: Int) {
-
-            if(type == 1008) {
-                adapterHotel.updateItemSingle(position)
-
-                val indiaLocale = Locale("en", "IN")
-                val india: NumberFormat = NumberFormat.getCurrencyInstance(indiaLocale)
-                val amount = india.format(hotelP!![position].Rate!!.toBigDecimal())
-
-                itemView.txtRate.text = amount + " /-"
-
-            }
-        }
-
     }
 }

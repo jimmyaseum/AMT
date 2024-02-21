@@ -9,7 +9,9 @@ import android.view.inputmethod.EditorInfo
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.amtcust.R
+import com.app.amtcust.activity.DestinationDetailsActivity
 import com.app.amtcust.activity.DestinationListActivity
+import com.app.amtcust.activity.HomeActivity
 import com.app.amtcust.adapter.ExplorePageAdapter.*
 import com.app.amtcust.interFase.RecyclerClickListener
 import com.app.amtcust.model.response.*
@@ -30,13 +32,26 @@ class ExploreFragment : BaseFragment(), View.OnClickListener, RecyclerClickListe
     private var arrTrendList: ArrayList<TopTrendListModel> = ArrayList()
 
     lateinit var adapterTour: ToursAdapter
-    private var arrTournList: ArrayList<TourListModel> = ArrayList()
+    private var arrTournList: ArrayList<TourDestinationListModel> = ArrayList()
 
     lateinit var adapterCustomize: CustomizedHolidaysAdapter
     private var arrCustomizeList: ArrayList<CustomizedListModel> = ArrayList()
 
     lateinit var adapterHimalayan: HimalayanTreksAdapter
     private var arrHimalayanList: ArrayList<HimalayanListModel> = ArrayList()
+
+    var SpecialityFilters = ""
+    var RoomTypeFilters = ""
+    var DurationFilters = ""
+    var MinFilters = "0"
+    var MaxFilters = "200000"
+    var OrderBy = "ORDER BY Rate ASC"
+    var redionId = ""
+    var sectorURL = ""
+    var PageIndex = 1
+    var PageSize = 30
+    var Himalayatrek = ""
+    var IsSearch = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,7 +86,7 @@ class ExploreFragment : BaseFragment(), View.OnClickListener, RecyclerClickListe
         GetTopIndianList()
         GetTopTrendingHolidayList()
         GetToursList()
-        GetHimalayanList()
+//        GetHimalayanList()
         GetCustomizedHolidaysList()
 
         views!!.rvParadiseOnEarth.adapter = ParadiseOnEarthAdapter(activity, this)
@@ -86,8 +101,8 @@ class ExploreFragment : BaseFragment(), View.OnClickListener, RecyclerClickListe
                     arrIndianList.clear()
                     arrIndianList = it.data?.Data!!
 
-                    if(arrIndianList.size > 0) {
-                        adapterIndian = TopIndianDestinationAdapter(activity,arrIndianList,this)
+                    if (arrIndianList.size > 0) {
+                        adapterIndian = TopIndianDestinationAdapter(activity, arrIndianList, this)
                         views!!.rvTopIndianDestinations.adapter = adapterIndian
                     }
 
@@ -108,8 +123,9 @@ class ExploreFragment : BaseFragment(), View.OnClickListener, RecyclerClickListe
                     arrTrendList.clear()
                     arrTrendList = it.data?.Data!!
 
-                    if(arrTrendList.size > 0) {
-                        adapterTrend = TopTrendingHolidayDestinationAdapter(activity,arrTrendList,this)
+                    if (arrTrendList.size > 0) {
+                        adapterTrend =
+                            TopTrendingHolidayDestinationAdapter(activity, arrTrendList, this)
                         views!!.rvTopTrendingHolidayDestinations.adapter = adapterTrend
                     }
                 } else
@@ -121,23 +137,37 @@ class ExploreFragment : BaseFragment(), View.OnClickListener, RecyclerClickListe
     }
 
     private fun GetToursList() {
-        repo.getToursList(listners = ResponseListner {
 
-            if (it.status) {
-                if (it.data?.Status == 200) {
-                    arrTournList.clear()
-                    arrTournList = it.data?.Data!!
+        val budgetfilter = "Rate BETWEEN "+ MinFilters +" AND " + MaxFilters
 
-                    if(arrTournList.size > 0) {
-                        adapterTour = ToursAdapter(activity,arrTournList,this)
-                        views!!.rvTours.adapter = adapterTour
-                    }
+        repo.getCoupleTourDestinationList(redionId,
+            RoomTypeFilters,
+            Himalayatrek,
+            budgetfilter,
+            DurationFilters,
+            SpecialityFilters,
+            OrderBy,
+            IsSearch,
+            sectorURL,
+            PageIndex,
+            PageSize,
+            listners = ResponseListner {
+
+                if (it.status) {
+                    if (it.data?.Status == 200) {
+                        arrTournList.clear()
+                        arrTournList = it.data?.Data!!
+
+                        if (arrTournList.size > 0) {
+                            adapterTour = ToursAdapter(activity, arrTournList, this)
+                            views!!.rvTours.adapter = adapterTour
+                        }
+                    } else
+                        it.data?.Message?.toast(activity!!)
                 } else
-                    it.data?.Message?.toast(activity!!)
-            } else
-                it.message.toast(activity!!)
+                    it.message.toast(activity!!)
 
-        })
+            })
     }
 
     private fun GetCustomizedHolidaysList() {
@@ -149,9 +179,10 @@ class ExploreFragment : BaseFragment(), View.OnClickListener, RecyclerClickListe
                     arrCustomizeList.clear()
                     arrCustomizeList = it.data?.Data!!
 
-                    if(arrCustomizeList.size > 0) {
+                    if (arrCustomizeList.size > 0) {
 
-                        adapterCustomize =  CustomizedHolidaysAdapter(activity,arrCustomizeList,this)
+                        adapterCustomize =
+                            CustomizedHolidaysAdapter(activity, arrCustomizeList, this)
                         views!!.rvCustomizedHolidays.adapter = adapterCustomize
 
                     }
@@ -163,7 +194,6 @@ class ExploreFragment : BaseFragment(), View.OnClickListener, RecyclerClickListe
         })
     }
 
-
     private fun GetHimalayanList() {
         repo.getHimalayanList(listners = ResponseListner {
 
@@ -172,8 +202,8 @@ class ExploreFragment : BaseFragment(), View.OnClickListener, RecyclerClickListe
                     arrHimalayanList.clear()
                     arrHimalayanList = it.data?.Data!!
 
-                    if(arrHimalayanList.size > 0) {
-                        adapterHimalayan = HimalayanTreksAdapter(activity,arrHimalayanList,this)
+                    if (arrHimalayanList.size > 0) {
+                        adapterHimalayan = HimalayanTreksAdapter(activity, arrHimalayanList, this)
                         views!!.rvHimalayanTreks.adapter = adapterHimalayan
 
                     }
@@ -194,13 +224,13 @@ class ExploreFragment : BaseFragment(), View.OnClickListener, RecyclerClickListe
         views!!.tvViewAllParadiseOnEarth.setOnClickListener(this)
 
         views!!.etSearch.setOnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_DONE  || actionId == EditorInfo.IME_ACTION_SEARCH) {
+            if (actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val intent = Intent(activity, DestinationListActivity::class.java)
-                intent.putExtra("REGIONID","")
-                intent.putExtra("TRAVELTYPE","")
-                intent.putExtra("SECTORID","")
-                intent.putExtra("HIMALAYATREK","")
-                intent.putExtra("ISSEARCH",views!!.etSearch.text.toString())
+                intent.putExtra("REGIONID", "")
+                intent.putExtra("TRAVELTYPE", "")
+                intent.putExtra("SECTORURL", "")
+                intent.putExtra("HIMALAYATREK", "")
+                intent.putExtra("ISSEARCH", views!!.etSearch.text.toString())
                 startActivity(intent)
                 true
             } else {
@@ -213,50 +243,54 @@ class ExploreFragment : BaseFragment(), View.OnClickListener, RecyclerClickListe
         when (v?.id) {
 
             R.id.tvViewAllTopIndianDestinations -> {
-                val intent = Intent(activity, DestinationListActivity::class.java)
-                intent.putExtra("REGIONID","1")
-                intent.putExtra("TRAVELTYPE","")
-                intent.putExtra("SECTORID","")
-                intent.putExtra("HIMALAYATREK","")
-                intent.putExtra("ISSEARCH","")
-                startActivity(intent)
+                val homeActivity = activity as? HomeActivity
+                homeActivity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.container, IndiaTourFragment())
+                    ?.commit()
+
+                homeActivity?.updateNavigationAndTitleForIndiaTour()
             }
+
             R.id.tvViewAllTopTrendingHolidayDestinations -> {
-                val intent = Intent(activity, DestinationListActivity::class.java)
-                intent.putExtra("REGIONID","2")
-                intent.putExtra("TRAVELTYPE","")
-                intent.putExtra("SECTORID","")
-                intent.putExtra("HIMALAYATREK","")
-                intent.putExtra("ISSEARCH","")
-                startActivity(intent)
+                val homeActivity = activity as? HomeActivity
+                homeActivity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.container, WorldTourFragment())
+                    ?.commit()
+
+                homeActivity?.updateNavigationAndTitleForWorldTour()
             }
+
             R.id.tvViewAllTours -> {
                 val intent = Intent(activity, DestinationListActivity::class.java)
-                intent.putExtra("REGIONID","")
-                intent.putExtra("TRAVELTYPE","Tour")
-                intent.putExtra("SECTORID","")
-                intent.putExtra("HIMALAYATREK","")
-                intent.putExtra("ISSEARCH","")
+                intent.putExtra("REGIONID", "")
+                intent.putExtra("TRAVELTYPE", "Tour")
+                intent.putExtra("SECTORURL", "")
+                intent.putExtra("ISCOUPLETOUR", true)
+                intent.putExtra("HIMALAYATREK", "")
+                intent.putExtra("ISSEARCH", "")
                 startActivity(intent)
             }
+
             R.id.tvViewAllCustomizedHolidays -> {
                 val intent = Intent(activity, DestinationListActivity::class.java)
-                intent.putExtra("REGIONID","")
-                intent.putExtra("TRAVELTYPE","Package")
-                intent.putExtra("SECTORID","")
-                intent.putExtra("HIMALAYATREK","")
-                intent.putExtra("ISSEARCH","")
+                intent.putExtra("REGIONID", "")
+                intent.putExtra("TRAVELTYPE", "Package")
+                intent.putExtra("SECTORURL", "")
+                intent.putExtra("HIMALAYATREK", "")
+                intent.putExtra("ISSEARCH", "")
                 startActivity(intent)
             }
+
             R.id.tvViewAllHimalayanTreks -> {
                 val intent = Intent(activity, DestinationListActivity::class.java)
-                intent.putExtra("REGIONID","")
-                intent.putExtra("TRAVELTYPE","")
-                intent.putExtra("SECTORID","")
-                intent.putExtra("HIMALAYATREK","true")
-                intent.putExtra("ISSEARCH","")
+                intent.putExtra("REGIONID", "")
+                intent.putExtra("TRAVELTYPE", "")
+                intent.putExtra("SECTORURL", "")
+                intent.putExtra("HIMALAYATREK", "true")
+                intent.putExtra("ISSEARCH", "")
                 startActivity(intent)
             }
+
             R.id.tvViewAllParadiseOnEarth -> {
 
             }
@@ -267,49 +301,54 @@ class ExploreFragment : BaseFragment(), View.OnClickListener, RecyclerClickListe
         when (type) {
             101 -> {
                 val intent = Intent(activity, DestinationListActivity::class.java)
-                intent.putExtra("REGIONID","1")
-                intent.putExtra("TRAVELTYPE","")
-                intent.putExtra("SECTORID",arrIndianList[position].ID.toString())
-                intent.putExtra("HIMALAYATREK","")
-                intent.putExtra("ISSEARCH","")
+                intent.putExtra("REGIONID", "")
+                intent.putExtra("TRAVELTYPE", "")
+                intent.putExtra("SECTORURL", arrIndianList[position].DestinationURL.toString())
+                intent.putExtra("HIMALAYATREK", "")
+                intent.putExtra("ISSEARCH", "")
                 startActivity(intent)
             }
+
             102 -> {
                 val intent = Intent(activity, DestinationListActivity::class.java)
-                intent.putExtra("REGIONID","2")
-                intent.putExtra("TRAVELTYPE","")
-                intent.putExtra("SECTORID",arrTrendList[position].ID.toString())
-                intent.putExtra("HIMALAYATREK","")
-                intent.putExtra("ISSEARCH","")
+                intent.putExtra("REGIONID", "")
+                intent.putExtra("TRAVELTYPE", "")
+                intent.putExtra("SECTORURL", arrTrendList[position].DestinationURL.toString())
+                intent.putExtra("HIMALAYATREK", "")
+                intent.putExtra("ISSEARCH", "")
                 startActivity(intent)
             }
+
             103 -> {
-                val intent = Intent(activity, DestinationListActivity::class.java)
-                intent.putExtra("REGIONID","")
-                intent.putExtra("TRAVELTYPE","Tour")
-                intent.putExtra("SECTORID",arrTournList[position].SectorID.toString())
-                intent.putExtra("HIMALAYATREK","")
-                intent.putExtra("ISSEARCH","")
+                val intent = Intent(activity, DestinationDetailsActivity::class.java)
+                intent.putExtra("TourID",arrTournList[position].ID)
+                intent.putExtra("TourURL",arrTournList[position].TourURL)
+                intent.putExtra("RateType",arrTournList[position].Ratetype)
+                intent.putExtra("NoOfNights",arrTournList[position].NoOfNights)
+                intent.putExtra("RoomTypeID",arrTournList[position].RoomTypeID)
                 startActivity(intent)
             }
+
             104 -> {
                 val intent = Intent(activity, DestinationListActivity::class.java)
-                intent.putExtra("REGIONID","")
-                intent.putExtra("TRAVELTYPE","Package")
-                intent.putExtra("SECTORID",arrCustomizeList[position].SectorID.toString())
-                intent.putExtra("HIMALAYATREK","")
-                intent.putExtra("ISSEARCH","")
+                intent.putExtra("REGIONID", "")
+                intent.putExtra("TRAVELTYPE", "Package")
+                intent.putExtra("SECTORURL", arrCustomizeList[position].SectorID.toString())
+                intent.putExtra("HIMALAYATREK", "")
+                intent.putExtra("ISSEARCH", "")
                 startActivity(intent)
             }
+
             105 -> {
                 val intent = Intent(activity, DestinationListActivity::class.java)
-                intent.putExtra("REGIONID","")
-                intent.putExtra("TRAVELTYPE","")
-                intent.putExtra("SECTORID",arrHimalayanList[position].SectorID.toString())
-                intent.putExtra("HIMALAYATREK","true")
-                intent.putExtra("ISSEARCH","")
+                intent.putExtra("REGIONID", "")
+                intent.putExtra("TRAVELTYPE", "")
+                intent.putExtra("SECTORURL", arrHimalayanList[position].SectorID.toString())
+                intent.putExtra("HIMALAYATREK", "true")
+                intent.putExtra("ISSEARCH", "")
                 startActivity(intent)
             }
+
             106 -> {
 
             }

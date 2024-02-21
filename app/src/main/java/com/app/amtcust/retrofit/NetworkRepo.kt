@@ -1,7 +1,9 @@
 package com.app.amtcust.retrofit
 
+import android.util.Log
 import com.app.amtcust.model.response.*
 import com.app.amtcust.utils.AppConstant.BASE_URL_APP
+import com.app.amtcust.utils.AppConstant.BASE_URL_WEB
 import com.app.amtcust.utils.enqueueCall
 import com.app.amtcust.utils.getRequestJSONBody
 import com.google.gson.GsonBuilder
@@ -17,14 +19,20 @@ import java.util.concurrent.TimeUnit
 
 class NetworkRepo {
 
-    private val mService: ApiInterface
+    private val mServiceapp: ApiInterface
+    private val mServiceweb: ApiInterface
     private var mRetrofit: Retrofit? = null
 
     init {
-        mService = createService()
+        mServiceapp = createServiceapp()
     }
 
-    class OAuthInterceptor(private val tokenType: String, private val acceessToken: String): Interceptor {
+    init {
+        mServiceweb = createServiceweb()
+    }
+
+    class OAuthInterceptor(private val tokenType: String, private val acceessToken: String) :
+        Interceptor {
 
         override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
             var request = chain.request()
@@ -56,8 +64,7 @@ class NetworkRepo {
     }
 
     private val client: OkHttpClient
-
-    get() {
+        get() {
             val dispatcher = Dispatcher()
             dispatcher.maxRequests = 1
 
@@ -73,7 +80,7 @@ class NetworkRepo {
                 .build()
         }
 
-    private fun createService(): ApiInterface {
+    private fun createServiceapp(): ApiInterface {
         val gson = GsonBuilder()
             .setLenient()
             .create()
@@ -88,15 +95,25 @@ class NetworkRepo {
         return mRetrofit!!.create(ApiInterface::class.java)
     }
 
+    private fun createServiceweb(): ApiInterface {
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL_WEB)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(client)
+            .build()
+
+        return retrofit.create(ApiInterface::class.java)
+    }
+
     fun getSectorList(
         regionid: String,
         listners: ResponseListner<SectorListResponse?>
     ) {
-
-        var jsonObject = JSONObject()
-        jsonObject.put("RegionID", regionid)
-
-        mService.getSectorList(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getSectorList(regionid)
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<SectorListResponse?>)
@@ -112,7 +129,7 @@ class NetworkRepo {
         var jsonObject = JSONObject()
         jsonObject.put("ParentCustomerID", cusromer)
 
-        mService.getFamilyMemberList(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getFamilyMemberList(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<FamilyMemberResponse?>)
@@ -128,7 +145,7 @@ class NetworkRepo {
         var jsonObject = JSONObject()
         jsonObject.put("CustomerID", cusromerid)
 
-        mService.getPaymentList(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getPaymentList(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<PaymentListResponse?>)
@@ -144,7 +161,7 @@ class NetworkRepo {
         var jsonObject = JSONObject()
         jsonObject.put("OperationType", 1)
 
-        mService.getTopIndianList(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getTopIndianList(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<TopIndiaListResponse?>)
@@ -159,7 +176,7 @@ class NetworkRepo {
         var jsonObject = JSONObject()
         jsonObject.put("OperationType", 2)
 
-        mService.getTopTrendList(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getTopTrendList(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<TopTrendListResponse?>)
@@ -174,7 +191,7 @@ class NetworkRepo {
         var jsonObject = JSONObject()
         jsonObject.put("OperationType", 3)
 
-        mService.getTourList(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getTourList(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<TourListResponse?>)
@@ -189,7 +206,7 @@ class NetworkRepo {
         var jsonObject = JSONObject()
         jsonObject.put("OperationType", 4)
 
-        mService.getCustomizedList(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getCustomizedList(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<CustomizedListResponse?>)
@@ -205,7 +222,7 @@ class NetworkRepo {
         var jsonObject = JSONObject()
         jsonObject.put("OperationType", 5)
 
-        mService.getHimalayanList(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getHimalayanList(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<HimalayanListResponse?>)
@@ -224,7 +241,7 @@ class NetworkRepo {
         jsonObject.put("CustomerID", cusromer)
         jsonObject.put("DocumentType", doctype)
 
-        mService.getDocumentList(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getDocumentList(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<DocumentResponse?>)
@@ -232,34 +249,39 @@ class NetworkRepo {
             }
     }
 
-    fun getTourDestinationList(
+    fun getCoupleTourDestinationList(
         RegionID: String,
-        TravelType: String,
+        TourType: String,
         IsHimalayanTreks: String,
-        SectorID: String,
         Rate: String,
         NoOfDays: String,
         SpecialityType: String,
         OrderBy: String,
         IsSearch: String,
+        SectorURL: String,
+        PageIndex: Int,
+        PageSize: Int,
         listners: ResponseListner<TourDestinationResponse?>
     ) {
 
-        val mRate = Rate.replace(", " , " OR ")
-        val mNoOfDays = NoOfDays.replace(", " , " OR ")
+        val mRate = Rate.replace(", ", " OR ")
+        val mNoOfDays = NoOfDays.replace(", ", " OR ")
 
         var jsonObject = JSONObject()
         jsonObject.put("RegionID", RegionID)
-        jsonObject.put("TravelType", TravelType)
+        jsonObject.put("TourType", TourType)
         jsonObject.put("IsHimalayanTreks", IsHimalayanTreks)
-        jsonObject.put("SectorID", SectorID)
+        jsonObject.put("SectorURL", SectorURL)
         jsonObject.put("Rate", mRate)
         jsonObject.put("NoOfDays", mNoOfDays)
         jsonObject.put("SpecialityType", SpecialityType)
+        jsonObject.put("SpecialityURL", "couple-tour")
         jsonObject.put("OrderBy", OrderBy)
         jsonObject.put("SectorName", IsSearch)
+        jsonObject.put("PageIndex", PageIndex)
+        jsonObject.put("PageSize", PageSize)
 
-        mService.getTourListFilter(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getCoupleTourListFilter(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<TourDestinationResponse?>)
@@ -267,9 +289,51 @@ class NetworkRepo {
             }
     }
 
-    fun getTourDetailsList(
+    fun getTourDestinationList(
+        RegionID: String,
+        TourType: String,
+        IsHimalayanTreks: String,
+        Rate: String,
+        NoOfDays: String,
+        SpecialityType: String,
+        OrderBy: String,
+        IsSearch: String,
+        SectorURL: String,
+        PageIndex: Int,
+        PageSize: Int,
+        listners: ResponseListner<TourDestinationResponse?>
+    ) {
+
+        val mRate = Rate.replace(", ", " OR ")
+        val mNoOfDays = NoOfDays.replace(", ", " OR ")
+
+        var jsonObject = JSONObject()
+        jsonObject.put("RegionID", RegionID)
+        jsonObject.put("TourType", TourType)
+        jsonObject.put("IsHimalayanTreks", IsHimalayanTreks)
+        jsonObject.put("SectorURL", SectorURL)
+        jsonObject.put("Rate", mRate)
+        jsonObject.put("NoOfDays", mNoOfDays)
+        jsonObject.put("SpecialityType", SpecialityType)
+        jsonObject.put("OrderBy", OrderBy)
+        jsonObject.put("SectorName", IsSearch)
+        jsonObject.put("PageIndex", PageIndex)
+        jsonObject.put("PageSize", PageSize)
+
+        mServiceapp.getTourListFilter(getRequestJSONBody(jsonObject.toString()))
+            .enqueueCall {
+                onResponse = {
+                    listners.onResponse(it as ApiResponse<TourDestinationResponse?>)
+                }
+            }
+    }
+
+    fun getItineraryDownload(
         tourid: Int,
-        ratetype:String,
+        toururl: String,
+        customerId: Int,
+        sessionID: String,
+        ratetype: String,
         noofnights: Int,
         roomTypeID: Int,
         listners: ResponseListner<TourDetailsResponse?>
@@ -277,11 +341,44 @@ class NetworkRepo {
 
         var jsonObject = JSONObject()
         jsonObject.put("TourID", tourid)
+        jsonObject.put("TourURL", toururl)
+        jsonObject.put("CustomerID", customerId)
+        jsonObject.put("SessionID", sessionID)
         jsonObject.put("RateType", ratetype)
         jsonObject.put("NoOfNights", noofnights.toString())
-        jsonObject.put("RoomTypeID",roomTypeID)
+        jsonObject.put("RoomTypeID", roomTypeID)
 
-        mService.getTourDetail(getRequestJSONBody(jsonObject.toString()))
+        Log.e("Service App", "==>" + mServiceapp)
+        Log.e("Service Web", "==>" + mServiceweb)
+        mServiceweb.getItineraryDownload(getRequestJSONBody(jsonObject.toString()))
+            .enqueueCall {
+                onResponse = {
+                    listners.onResponse(it as ApiResponse<TourDetailsResponse?>)
+                }
+            }
+    }
+
+    fun getTourDetailsList(
+        tourid: Int,
+        toururl: String,
+        customerId: Int,
+        sessionID: String,
+        ratetype: String,
+        noofnights: Int,
+        roomTypeID: Int,
+        listners: ResponseListner<TourDetailsResponse?>
+    ) {
+
+        var jsonObject = JSONObject()
+        jsonObject.put("TourID", tourid)
+        jsonObject.put("TourURL", toururl)
+        jsonObject.put("CustomerID", customerId)
+        jsonObject.put("SessionID", sessionID)
+        jsonObject.put("RateType", ratetype)
+        jsonObject.put("NoOfNights", noofnights.toString())
+        jsonObject.put("RoomTypeID", roomTypeID)
+
+        mServiceapp.getTourDetail(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<TourDetailsResponse?>)
@@ -298,7 +395,7 @@ class NetworkRepo {
         jsonObject.put("CustomerID", cusromer)
 //        jsonObject.put("OperationType", opty)
 
-        mService.getTourBookingList(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getTourBookingList(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<TourBookingResponse?>)
@@ -313,7 +410,7 @@ class NetworkRepo {
         var jsonObject = JSONObject()
         jsonObject.put("ID", tourbookingid)
 
-        mService.getTourInformation(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getTourInformation(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<TourInformationResponse?>)
@@ -332,7 +429,7 @@ class NetworkRepo {
         jsonObject.put("CustomerID", cusromer)
         jsonObject.put("OperationType", opty)
 
-        mService.getPreviousList(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getPreviousList(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<FlightVoucherResponse?>)
@@ -350,7 +447,7 @@ class NetworkRepo {
         jsonObject.put("CustomerID", cusromer)
         jsonObject.put("OperationType", opty)
 
-        mService.getUpcomingHotelList(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getUpcomingHotelList(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<UpcomingHotelResponse?>)
@@ -366,7 +463,7 @@ class NetworkRepo {
         var jsonObject = JSONObject()
         jsonObject.put("ID", tourid)
 
-        mService.getTourBookingDetail(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getTourBookingDetail(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<TourBookingDetailsResponse?>)
@@ -385,7 +482,7 @@ class NetworkRepo {
         jsonObject.put("CustomerID", cusromer)
         jsonObject.put("OperationType", opty)
 
-        mService.getRouteList(getRequestJSONBody(jsonObject.toString()))
+        mServiceapp.getRouteList(getRequestJSONBody(jsonObject.toString()))
             .enqueueCall {
                 onResponse = {
                     listners.onResponse(it as ApiResponse<RouteVoucherResponse?>)

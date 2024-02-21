@@ -15,8 +15,7 @@ data class TourMonthResponse(
 data class TourMonthModel (
     @SerializedName("monthData")
     val monthData: ArrayList<MonthDataModel>? = null
-        )
-
+)
 
 data class MonthDataModel (
     @SerializedName("Month")

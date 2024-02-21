@@ -20,6 +20,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.app.amtcust.R
+import com.app.amtcust.adapter.AttachmentDetailAdapter
 import com.app.amtcust.adapter.FacilityAdapter
 import com.app.amtcust.adapter.Filter.DateAdapter
 import com.app.amtcust.adapter.Filter.MonthAdapter
@@ -28,6 +29,7 @@ import com.app.amtcust.adapter.ItineraryAdapter
 import com.app.amtcust.adapter.TourImagePagerAdapter
 import com.app.amtcust.adapter.dialog.*
 import com.app.amtcust.interFase.RecyclerClickListener
+import com.app.amtcust.model.AttachmentModel
 import com.app.amtcust.model.response.*
 import com.app.amtcust.retrofit.ApiUtils
 import com.app.amtcust.retrofit.NetworkRepo
@@ -47,6 +49,7 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
     private val repo by lazy { NetworkRepo() }
 
     var tourID: Int = 0
+    var TourURL: String = ""
     var RateType: String = ""
     var NoOfNights: Int = 0
     var RoomTypeID: Int = 0
@@ -54,14 +57,15 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
     var arrTourDetail: ArrayList<TourDetailsModel> = ArrayList()
 
     var arrRoomType: ArrayList<HotelRoom>? = null
-//    var RoomTypeId : Int = 0
-    var RoomTypeName : String = ""
+
+    //    var RoomTypeId : Int = 0
+    var RoomTypeName: String = ""
 
     var arrDates: ArrayList<TourDates>? = null
-    var SelectedDate : String = ""
+    var SelectedDate: String = ""
 
-    var str_Inclusion : String = ""
-    var str_Exclusion : String = ""
+    var str_Inclusion: String = ""
+    var str_Exclusion: String = ""
 
     var timer: Timer? = null
     var sharedPreference: SharedPreference? = null
@@ -72,14 +76,18 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
     private var arrDateList: ArrayList<DateDataModel> = ArrayList()
     private lateinit var dateadapter: DateAdapter
 
+    private var arrAttachmentList: ArrayList<AttachmentModel>? = null
+    lateinit var adapterAttachment: AttachmentDetailAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity)
 
-        tourID = intent.getIntExtra("TourID",0)
-        NoOfNights = intent.getIntExtra("NoOfNights",0)
+        tourID = intent.getIntExtra("TourID", 0)
+        TourURL = intent.getStringExtra("TourURL").toString()
+        NoOfNights = intent.getIntExtra("NoOfNights", 0)
         RateType = intent.getStringExtra("RateType").toString()
-        RoomTypeID = intent.getIntExtra("RoomTypeID",0)
+        RoomTypeID = intent.getIntExtra("RoomTypeID", 0)
         initializeView()
     }
 
@@ -88,6 +96,7 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
         imgBack.setOnClickListener(this)
         edtHotelType.setOnClickListener(this)
         edtDate.setOnClickListener(this)
+        txtItineraryDownload.setOnClickListener(this)
         txtInquiryNow.setOnClickListener(this)
         txtCall_Us.setOnClickListener(this)
 
@@ -99,56 +108,68 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
 
         if (isOnline(this)) {
             GetTourDetailsAPI()
-            callTourMonthApi(tourID)
+//            callTourMonthApi(tourID)
         } else {
             toast(getString(R.string.msg_no_internet), AppConstant.TOAST_SHORT)
         }
 
         txtReadMore.setOnClickListener {
-            if(txtOverViewLess.isVisible() && txtReadMore.text == "Read More") {
+            if (txtOverViewLess.isVisible() && txtReadMore.text == "Read More") {
                 txtOverViewLess.gone()
                 txtOverViewMore.visible()
                 txtReadMore.text = "Read Less"
-                txtReadMore.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_up, 0);
+                txtReadMore.setCompoundDrawablesWithIntrinsicBounds(
+                    0, 0, R.drawable.ic_keyboard_up, 0
+                );
 
             } else {
                 txtOverViewLess.visible()
                 txtOverViewMore.gone()
                 txtReadMore.text = "Read More"
-                txtReadMore.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_down, 0);
+                txtReadMore.setCompoundDrawablesWithIntrinsicBounds(
+                    0, 0, R.drawable.ic_keyboard_down, 0
+                );
             }
         }
         txtReadMoreHighlights.setOnClickListener {
-            if(txtHighlights.isVisible() && txtReadMoreHighlights.text == "Read More") {
+            if (txtHighlights.isVisible() && txtReadMoreHighlights.text == "Read More") {
                 txtHighlights.gone()
                 txtHighlightsMore.visible()
                 txtReadMoreHighlights.text = "Read Less"
-                txtReadMoreHighlights.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_up, 0);
+                txtReadMoreHighlights.setCompoundDrawablesWithIntrinsicBounds(
+                    0, 0, R.drawable.ic_keyboard_up, 0
+                );
 
             } else {
                 txtHighlights.visible()
                 txtHighlightsMore.gone()
                 txtReadMoreHighlights.text = "Read More"
-                txtReadMoreHighlights.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_down, 0);
+                txtReadMoreHighlights.setCompoundDrawablesWithIntrinsicBounds(
+                    0, 0, R.drawable.ic_keyboard_down, 0
+                );
             }
         }
         txtReadMoreIn_Ex.setOnClickListener {
-            if(txtOverViewLessIn_Ex.isVisible() && txtReadMoreIn_Ex.text == "Read More") {
+            if (txtOverViewLessIn_Ex.isVisible() && txtReadMoreIn_Ex.text == "Read More") {
                 txtOverViewLessIn_Ex.gone()
                 txtOverViewMoreIn_Ex.visible()
                 txtReadMoreIn_Ex.text = "Read Less"
-                txtReadMoreIn_Ex.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_up, 0);
+                txtReadMoreIn_Ex.setCompoundDrawablesWithIntrinsicBounds(
+                    0, 0, R.drawable.ic_keyboard_up, 0
+                );
 
             } else {
                 txtOverViewLessIn_Ex.visible()
                 txtOverViewMoreIn_Ex.gone()
                 txtReadMoreIn_Ex.text = "Read More"
-                txtReadMoreIn_Ex.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_down, 0);
+                txtReadMoreIn_Ex.setCompoundDrawablesWithIntrinsicBounds(
+                    0, 0, R.drawable.ic_keyboard_down, 0
+                );
             }
         }
 
         txtoverview.setOnClickListener {
-            ns.smoothScrollTo(0,0)
+            ns.smoothScrollTo(0, 0)
 
         }
         txtitinerary.setOnClickListener {
@@ -173,8 +194,16 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
             vExclusions.setBackgroundColor(resources.getColor(R.color.colorTransparent))
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                txtOverViewLessIn_Ex.setText(Html.fromHtml(str_Inclusion, Html.FROM_HTML_MODE_COMPACT))
-                txtOverViewMoreIn_Ex.setText(Html.fromHtml(str_Inclusion, Html.FROM_HTML_MODE_COMPACT))
+                txtOverViewLessIn_Ex.setText(
+                    Html.fromHtml(
+                        str_Inclusion, Html.FROM_HTML_MODE_COMPACT
+                    )
+                )
+                txtOverViewMoreIn_Ex.setText(
+                    Html.fromHtml(
+                        str_Inclusion, Html.FROM_HTML_MODE_COMPACT
+                    )
+                )
             } else {
                 txtOverViewLessIn_Ex.setText(Html.fromHtml(str_Inclusion))
                 txtOverViewMoreIn_Ex.setText(Html.fromHtml(str_Inclusion))
@@ -192,8 +221,16 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
             vExclusions.setBackgroundColor(resources.getColor(R.color.colorAccent))
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                txtOverViewLessIn_Ex.setText(Html.fromHtml(str_Exclusion, Html.FROM_HTML_MODE_COMPACT))
-                txtOverViewMoreIn_Ex.setText(Html.fromHtml(str_Exclusion, Html.FROM_HTML_MODE_COMPACT))
+                txtOverViewLessIn_Ex.setText(
+                    Html.fromHtml(
+                        str_Exclusion, Html.FROM_HTML_MODE_COMPACT
+                    )
+                )
+                txtOverViewMoreIn_Ex.setText(
+                    Html.fromHtml(
+                        str_Exclusion, Html.FROM_HTML_MODE_COMPACT
+                    )
+                )
 
             } else {
                 txtOverViewLessIn_Ex.setText(Html.fromHtml(str_Exclusion))
@@ -219,8 +256,7 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
 
                 txtin_ex.setBackgroundColor(resources.getColor(R.color.colorLightBg1))
                 vin_ex.setBackgroundColor(resources.getColor(R.color.colorAccent))
-            }
-            else if (LL_OVERVIEW.getLocalVisibleRect(scrollBounds)) {
+            } else if (LL_OVERVIEW.getLocalVisibleRect(scrollBounds)) {
                 txtoverview.setBackgroundColor(resources.getColor(R.color.colorLightBg1))
                 voverview.setBackgroundColor(resources.getColor(R.color.colorAccent))
 
@@ -232,8 +268,7 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
 
                 txtin_ex.setBackgroundColor(resources.getColor(R.color.colorWhite))
                 vin_ex.setBackgroundColor(resources.getColor(R.color.colorWhite))
-            }
-            else if (LL_COST.getLocalVisibleRect(scrollBounds)) {
+            } else if (LL_COST.getLocalVisibleRect(scrollBounds)) {
                 txtoverview.setBackgroundColor(resources.getColor(R.color.colorWhite))
                 voverview.setBackgroundColor(resources.getColor(R.color.colorWhite))
 
@@ -246,8 +281,7 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
                 txtin_ex.setBackgroundColor(resources.getColor(R.color.colorWhite))
                 vin_ex.setBackgroundColor(resources.getColor(R.color.colorWhite))
 
-            }
-            else if (LL_ITINERARY.getLocalVisibleRect(scrollBounds)) {
+            } else if (LL_ITINERARY.getLocalVisibleRect(scrollBounds)) {
                 txtoverview.setBackgroundColor(resources.getColor(R.color.colorWhite))
                 voverview.setBackgroundColor(resources.getColor(R.color.colorWhite))
 
@@ -270,23 +304,31 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
             R.id.imgBack -> {
                 finish()
             }
+
             R.id.edtHotelType -> {
-                if(!arrRoomType.isNullOrEmpty()) {
+                if (!arrRoomType.isNullOrEmpty()) {
                     selectRoomTypeDialog()
                 } else {
-                    toast("No Room Type Available",Toast.LENGTH_SHORT)
+                    toast("No Room Type Available", Toast.LENGTH_SHORT)
                 }
             }
+
             R.id.edtDate -> {
-                if(!arrDates.isNullOrEmpty()) {
+                if (!arrDates.isNullOrEmpty()) {
                     selectDateDialog()
                 } else {
-                    toast("No Dates Available",Toast.LENGTH_SHORT)
+                    toast("No Dates Available", Toast.LENGTH_SHORT)
                 }
             }
+
+            R.id.txtItineraryDownload -> {
+                GetItineraryDownloadAPI()
+            }
+
             R.id.txtInquiryNow -> {
                 selectDialog()
             }
+
             R.id.txtCall_Us -> {
                 sharedPreference = SharedPreference(this)
                 val MobileNum = sharedPreference?.getPreferenceString(PrefConstants.PREF_ADMIN_CALL)
@@ -305,36 +347,96 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
     private fun GetTourDetailsAPI() {
         launchProgress()
 
-        repo.getTourDetailsList(tourID,RateType,NoOfNights,RoomTypeID,  listners = ResponseListner {
+        sharedPreference = SharedPreference(this)
+        val CustomerID = sharedPreference?.getPreferenceString(PrefConstants.PREF_USER_ID)!!.toInt()
 
-            if (it.status) {
-                if (it.data?.Status == 200) {
-                    arrTourDetail.clear()
-                    arrTourDetail = it.data?.Data!!
-                    setData(arrTourDetail)
+        repo.getTourDetailsList(tourID,
+            TourURL,
+            CustomerID,
+            "",
+            RateType,
+            NoOfNights,
+            RoomTypeID,
+            listners = ResponseListner {
 
-                    Handler().postDelayed({
-                        annonce_main_coordinator.animate().alpha(5.0f)
+                if (it.status) {
+                    if (it.data?.Status == 200) {
+                        arrTourDetail.clear()
+                        arrTourDetail = it.data?.Data!!
+                        setData(arrTourDetail)
+
+                        Handler().postDelayed({
+                            annonce_main_coordinator.animate().alpha(5.0f)
+                            disposeProgress()
+                        }, 2000)
+
+                    } else if (it.data?.Status == 1010 || it.data?.Status == 201) {
+                        arrTourDetail?.clear()
+                        it.message.toast(this)
                         disposeProgress()
-                    }, 2000)
-
-                } else if (it.data?.Status  == 1010 ||  it.data?.Status  == 201) {
-                    arrTourDetail?.clear()
+                    }
+                } else {
                     it.message.toast(this)
                     disposeProgress()
                 }
-            } else {
-                it.message.toast(this)
+            })
+    }
+
+    private fun GetItineraryDownloadAPI() {
+        launchProgress()
+
+        sharedPreference = SharedPreference(this)
+        val CustomerID = sharedPreference?.getPreferenceString(PrefConstants.PREF_USER_ID)!!.toInt()
+
+        repo.getItineraryDownload(tourID,
+            TourURL,
+            CustomerID,
+            "",
+            RateType,
+            NoOfNights,
+            RoomTypeID,
+            listners = ResponseListner {
+
+                if (it.status) {
+                    if (it.data?.Status == 200) {
+                        val arrTourDetail = it.data?.Data
+
+                        if (!arrTourDetail.isNullOrEmpty() && arrTourDetail[0].PdfPath != null) {
+                            val pdfPath = arrTourDetail[0].PdfPath
+
+                            if (pdfPath!!.contains(".pdf")) {
+                                val format = "https://docs.google.com/gview?embedded=true&url=%s"
+                                val fullPath: String =
+                                    java.lang.String.format(Locale.ENGLISH, format, pdfPath)
+                                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(fullPath))
+                                startActivity(browserIntent)
+                            } else {
+                                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(pdfPath))
+                                startActivity(browserIntent)
+                            }
+                        } else {
+                            // Handle the case where PdfPath is null or the array is empty
+                            // You can show a toast or perform other actions as needed
+                        }
+
+                    } else if (it.data?.Status == 1010 || it.data?.Status == 201) {
+                        // Handle other statuses
+                        it.message.toast(this)
+                    }
+                } else {
+                    // Handle the case where the response is not successful
+                    it.message.toast(this)
+                }
+
                 disposeProgress()
-            }
-        })
+            })
     }
 
     private fun setData(model: ArrayList<TourDetailsModel>) {
 
-        if(model[0].TourImages != null) {
+        if (model[0].TourImages != null) {
             val TourImagesP = model[0].TourImages
-            if(TourImagesP!!.size > 0) {
+            if (TourImagesP!!.size > 0) {
                 val adapter = TourImagePagerAdapter(this, TourImagesP!!)
                 viewPager!!.adapter = adapter
 
@@ -357,23 +459,25 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
             }
         }
 
-        if(model[0].TourName != null && model[0].TourName != "") {
+        if (model[0].TourName != null && model[0].TourName != "") {
             txtTourName.text = model[0].TourName.toString()
         }
-        if(model[0].NoOfDays != null && model[0].NoOfDays != 0) {
+        if (model[0].NoOfDays != null && model[0].NoOfDays != 0) {
             txtDays.text = model[0].NoOfDays.toString()
         }
-        if(model[0].NoOfNights != null && model[0].NoOfNights != 0) {
+        if (model[0].NoOfNights != null && model[0].NoOfNights != 0) {
             txtNights.text = model[0].NoOfNights.toString()
         }
-        if(model[0].RateType != null && model[0].RateType != "") {
+        if (model[0].RateType != null && model[0].RateType != "") {
             txtratetype.text = model[0].RateType.toString()
         }
 
-        if(model[0].Highlights != null && model[0].Highlights != "") {
+        if (model[0].Highlights != null && model[0].Highlights != "") {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                txtHighlights.text = (Html.fromHtml(model[0].Highlights, Html.FROM_HTML_MODE_COMPACT))
-                txtHighlightsMore.text = (Html.fromHtml(model[0].Highlights, Html.FROM_HTML_MODE_COMPACT))
+                txtHighlights.text =
+                    (Html.fromHtml(model[0].Highlights, Html.FROM_HTML_MODE_COMPACT))
+                txtHighlightsMore.text =
+                    (Html.fromHtml(model[0].Highlights, Html.FROM_HTML_MODE_COMPACT))
             } else {
                 txtHighlights.text = (Html.fromHtml(model[0].Highlights))
                 txtHighlightsMore.text = (Html.fromHtml(model[0].Highlights))
@@ -382,18 +486,43 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
         } else {
             linear_highlights.gone()
         }
-        if(model[0].OverallInclusions != null && model[0].OverallInclusions != "") {
-            txtOverViewLess.text = model[0].OverallInclusions.toString()
-            txtOverViewMore.text = model[0].OverallInclusions.toString()
+        if (model[0].Overview != null && model[0].Overview != "") {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                txtOverViewLess.setText(
+                    Html.fromHtml(
+                        model[0].Overview, Html.FROM_HTML_MODE_COMPACT
+                    )
+                )
+                txtOverViewMore.setText(
+                    Html.fromHtml(
+                        model[0].Overview, Html.FROM_HTML_MODE_COMPACT
+                    )
+                )
+            } else {
+                txtOverViewLess.setText(Html.fromHtml(model[0].Overview))
+                txtOverViewMore.setText(Html.fromHtml(model[0].Overview))
+            }
             linear_overview.visible()
         } else {
             linear_overview.gone()
         }
 
-        if(model[0].Exclusions != null && model[0].Exclusions != "") {
+        arrAttachmentList = ArrayList()
+        arrAttachmentList = model[0].tourDocuments
+        if (arrAttachmentList!!.size > 0) {
+            adapterAttachment =
+                AttachmentDetailAdapter(this@DestinationDetailsActivity, arrAttachmentList)
+            rvAttachments.adapter = adapterAttachment
+            LL_My_Document.visible()
+        } else {
+            LL_My_Document.gone()
+        }
+
+        if (model[0].Exclusions != null && model[0].Exclusions != "") {
             str_Exclusion = model[0].Exclusions!!
         }
-        if(model[0].Inclusions != null && model[0].Inclusions != "") {
+        if (model[0].Inclusions != null && model[0].Inclusions != "") {
             str_Inclusion = model[0].Inclusions!!
 
             txtInclusions.setTextColor(resources.getColor(R.color.colorAccent))
@@ -407,8 +536,16 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
             vExclusions.setBackgroundColor(resources.getColor(R.color.colorTransparent))
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                txtOverViewLessIn_Ex.setText(Html.fromHtml(str_Inclusion, Html.FROM_HTML_MODE_COMPACT))
-                txtOverViewMoreIn_Ex.setText(Html.fromHtml(str_Inclusion, Html.FROM_HTML_MODE_COMPACT))
+                txtOverViewLessIn_Ex.setText(
+                    Html.fromHtml(
+                        str_Inclusion, Html.FROM_HTML_MODE_COMPACT
+                    )
+                )
+                txtOverViewMoreIn_Ex.setText(
+                    Html.fromHtml(
+                        str_Inclusion, Html.FROM_HTML_MODE_COMPACT
+                    )
+                )
             } else {
                 txtOverViewLessIn_Ex.setText(Html.fromHtml(str_Inclusion))
                 txtOverViewMoreIn_Ex.setText(Html.fromHtml(str_Inclusion))
@@ -416,12 +553,12 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
 
         }
 
-        if(model[0].toufacility != null) {
+        if (model[0].toufacility != null) {
             val FacilityP = model[0].toufacility
-            if(FacilityP != null) {
-                if(FacilityP!!.size > 0) {
+            if (FacilityP != null) {
+                if (FacilityP!!.size > 0) {
                     val adapterFacility = FacilityAdapter(this, FacilityP!!)
-                    rvFacilityData.adapter  = adapterFacility
+                    rvFacilityData.adapter = adapterFacility
                 }
                 linear_price_of_inclusive.visible()
             } else {
@@ -435,24 +572,50 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
 //            arrDates = model[0].Toudate
 //        }
 
-        if(model[0].touritinerary != null) {
+        if (model[0].tourdates != null) {
+            arrMonthList.clear()
+            arrMonthList = model[0].tourdates!!
+
+            if (arrMonthList.size > 0) {
+                arrMonthList[0].isSelected = true
+
+                monthadapter = MonthAdapter(
+                    this@DestinationDetailsActivity, arrMonthList, this@DestinationDetailsActivity
+                )
+                rvMonth.adapter = monthadapter
+
+                arrDateList = ArrayList()
+                arrDateList = arrMonthList[0].DateData!!
+
+                if (arrDateList.size > 0) {
+                    dateadapter = DateAdapter(this@DestinationDetailsActivity, arrDateList)
+                    rvDate.adapter = dateadapter
+                    rvDate.visible()
+                } else {
+                    rvDate.gone()
+                }
+
+            }
+        }
+
+        if (model[0].touritinerary != null) {
             val touritinerary = model[0].touritinerary
-            if(touritinerary!!.size > 0) {
-                val adapterItinerary= ItineraryAdapter(this, touritinerary!!)
-                rvItineraryData.adapter  = adapterItinerary
+            if (touritinerary!!.size > 0) {
+                val adapterItinerary = ItineraryAdapter(this, touritinerary!!)
+                rvItineraryData.adapter = adapterItinerary
             }
 
         }
-        if(model[0].tourcost != null) {
+        if (model[0].tourcost != null) {
             arrRoomType = model[0].tourcost
-            for(i in 0 until arrRoomType!!.size) {
-                if(arrRoomType!![i].RoomType == "DELUXE") {
+            for (i in 0 until arrRoomType!!.size) {
+                if (arrRoomType!![i].RoomType == "DELUXE") {
 
 //                    RoomTypeId = arrRoomType!![i].RoomTypeID!!
                     RoomTypeName = arrRoomType!![i].RoomType!!
                     edtHotelType.setText(arrRoomType!![i].RoomType)
 
-                    if(arrRoomType!![i].Rate!!.toDouble() != 0.0) {
+                    if (arrRoomType!![i].Rate!!.toDouble() != 0.0) {
                         val indiaLocale = Locale("en", "IN")
                         val india: NumberFormat = NumberFormat.getCurrencyInstance(indiaLocale)
                         val amount = india.format(arrRoomType!![i].Rate!!.toBigDecimal())
@@ -466,7 +629,7 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
 //                    RoomTypeId = arrRoomType!![0].RoomTypeID!!
                     RoomTypeName = arrRoomType!![0].RoomType!!
                     edtHotelType.setText(arrRoomType!![0].RoomType)
-                    if(arrRoomType!![0].Rate!!.toDouble() != 0.0) {
+                    if (arrRoomType!![0].Rate!!.toDouble() != 0.0) {
                         val indiaLocale = Locale("en", "IN")
                         val india: NumberFormat = NumberFormat.getCurrencyInstance(indiaLocale)
                         val amount = india.format(arrRoomType!![0].Rate!!.toBigDecimal())
@@ -478,27 +641,31 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
                 }
             }
         }
-        if(model[0].tourhotelcost != null) {
+        if (model[0].tourhotelcost != null) {
             val tourhotelcost = model[0].tourhotelcost
-            if(tourhotelcost != null) {
-                if(tourhotelcost!!.size > 0) {
-                    val adapterhotelcost= HotelCostAdapter(this, tourhotelcost!!)
-                    rvHotelCostData.adapter  = adapterhotelcost
+            if (tourhotelcost != null) {
+                if (tourhotelcost!!.size > 0) {
+                    val adapterhotelcost = HotelCostAdapter(this, tourhotelcost!!)
+                    rvHotelCostData.adapter = adapterhotelcost
                 }
             }
         }
 
-        var selectedcity = ""
-        val citiesName1: ArrayList<String> = ArrayList()
-        val citiesP = model[0].touCities
-        if(citiesP != null) {
-            for(i in 0 until citiesP.size) {
-                citiesName1!!.add(citiesP[i].CityName!!+ "(${citiesP[i].NoOfNights!!}N)")
-            }
-            selectedcity = TextUtils.join(" -> ", citiesName1)
-            txtCities.text = selectedcity
+        /* var selectedcity = ""
+         val citiesName1: ArrayList<String> = ArrayList()
+         val citiesP = model[0].touCities
+         if(citiesP != null) {
+             for(i in 0 until citiesP.size) {
+                 citiesName1!!.add(citiesP[i].CityName!!+ "(${citiesP[i].NoOfNights!!}N)")
+             }
+             selectedcity = TextUtils.join(" -> ", citiesName1)
+             txtCities.text = selectedcity
+         }*/
 
+        if (model[0].TourCities != null && model[0].TourCities != "") {
+            txtCities.text = model[0].TourCities.toString()
         }
+
     }
 
     /** AI005
@@ -518,20 +685,22 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
         dialogSelectRoomType.setCancelable(true)
         dialogSelectRoomType.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        dialogSelectRoomType.window!!.setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        dialogSelectRoomType.window!!.setLayout(
+            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        )
         dialogSelectRoomType.window!!.setGravity(Gravity.CENTER)
 
         val rvRoomTypeList = dialogSelectRoomType.findViewById(R.id.rvRoomTypeList) as RecyclerView
 
-        val itemAdapter = DialogRoomTypeAdapter(RoomTypeName,this, arrRoomType!!)
+        val itemAdapter = DialogRoomTypeAdapter(RoomTypeName, this, arrRoomType!!)
         itemAdapter.setRecyclerRowClick(object : RecyclerClickListener {
-            override fun onItemClickEvent(v:View, pos: Int, flag: Int) {
+            override fun onItemClickEvent(v: View, pos: Int, flag: Int) {
                 itemAdapter.updateItemSingle(pos)
 //                RoomTypeId = arrRoomType!![pos].RoomTypeID!!
                 RoomTypeName = arrRoomType!![pos].RoomType!!
                 edtHotelType.setText(arrRoomType!![pos].RoomType)
 
-                if(arrRoomType!![pos].Rate!!.toDouble() != 0.0) {
+                if (arrRoomType!![pos].Rate!!.toDouble() != 0.0) {
                     val indiaLocale = Locale("en", "IN")
                     val india: NumberFormat = NumberFormat.getCurrencyInstance(indiaLocale)
                     val amount = india.format(arrRoomType!![pos].Rate!!.toBigDecimal())
@@ -566,14 +735,16 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
         dialogSelectdate.setCancelable(true)
         dialogSelectdate.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        dialogSelectdate.window!!.setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        dialogSelectdate.window!!.setLayout(
+            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        )
         dialogSelectdate.window!!.setGravity(Gravity.CENTER)
 
         val rvRoomTypeList = dialogSelectdate.findViewById(R.id.rvRoomTypeList) as RecyclerView
 
         val itemAdapter = DialogDateAdapter(this, arrDates!!)
         itemAdapter.setRecyclerRowClick(object : RecyclerClickListener {
-            override fun onItemClickEvent(v:View, pos: Int, flag: Int) {
+            override fun onItemClickEvent(v: View, pos: Int, flag: Int) {
                 itemAdapter.updateItemSingle(pos)
                 SelectedDate = arrDates!![pos].TourDate!!
                 edtDate.setText(arrDates!![pos].TourDate)
@@ -604,7 +775,9 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
         dialogMember.setCancelable(true)
         dialogMember.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        dialogMember.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        dialogMember.window!!.setLayout(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        )
         dialogMember.window!!.setGravity(Gravity.CENTER)
 
         val etName = dialogMember.findViewById(R.id.etName) as EditText
@@ -633,18 +806,21 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
             showProgress()
 
             val jsonObject = JSONObject()
-            jsonObject.put("Name",etName.text.toString().trim())
-            jsonObject.put("Destination",etDestination.text.toString().trim())
+            jsonObject.put("Name", etName.text.toString().trim())
+            jsonObject.put("Destination", etDestination.text.toString().trim())
             jsonObject.put("MobileNo", etMobile.text.toString().trim())
             jsonObject.put("EmailID", etEmail.text.toString().trim())
             jsonObject.put("TourType", etType.text.toString().trim())
             jsonObject.put("EmployeeID", 0)
             jsonObject.put("IsActive", true)
 
-            val call = ApiUtils.apiInterface.CreateInquiry(getRequestJSONBody(jsonObject.toString()))
+            val call =
+                ApiUtils.apiInterface.CreateInquiry(getRequestJSONBody(jsonObject.toString()))
 
             call.enqueue(object : Callback<CommonResponse> {
-                override fun onResponse(call: Call<CommonResponse>, response: Response<CommonResponse>) {
+                override fun onResponse(
+                    call: Call<CommonResponse>, response: Response<CommonResponse>
+                ) {
 
                     if (response.code() == 200) {
 
@@ -658,16 +834,20 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
                         }
                     }
                 }
+
                 override fun onFailure(call: Call<CommonResponse>, t: Throwable) {
                     hideProgress()
                     dialogMember.dismiss()
-                    toast(resources.getString(R.string.error_failed_to_connect), AppConstant.TOAST_SHORT)
+                    toast(
+                        resources.getString(R.string.error_failed_to_connect),
+                        AppConstant.TOAST_SHORT
+                    )
                 }
             })
         }
 
         etDestination.setOnClickListener {
-            if(arrSectorList.size > 0) {
+            if (arrSectorList.size > 0) {
                 var dialogSelectCity = Dialog(this)
                 dialogSelectCity.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
@@ -681,15 +861,19 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
                 dialogSelectCity.setCancelable(true)
                 dialogSelectCity.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-                dialogSelectCity.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                dialogSelectCity.window!!.setLayout(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                )
                 dialogSelectCity.window!!.setGravity(Gravity.CENTER)
 
-                val rvDialogCustomer = dialogSelectCity.findViewById(R.id.rvDialogCustomer) as RecyclerView
-                val edtSearchCustomer = dialogSelectCity.findViewById(R.id.edtSearchCustomer) as EditText
+                val rvDialogCustomer =
+                    dialogSelectCity.findViewById(R.id.rvDialogCustomer) as RecyclerView
+                val edtSearchCustomer =
+                    dialogSelectCity.findViewById(R.id.edtSearchCustomer) as EditText
 
                 val itemAdapter = DialogSectorAdapter(this, arrSectorList!!)
                 itemAdapter.setRecyclerRowClick(object : RecyclerClickListener {
-                    override fun onItemClickEvent(v:View, pos: Int, flag: Int) {
+                    override fun onItemClickEvent(v: View, pos: Int, flag: Int) {
                         etDestination.setText(arrSectorList[pos].SectorName)
                         dialogSelectCity!!.dismiss()
                     }
@@ -703,10 +887,13 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
                 var jsonObject = JSONObject()
                 jsonObject.put("SectorType", etType.text.toString())
 
-                val call = ApiUtils.apiInterface.getAllSector(getRequestJSONBody(jsonObject.toString()))
+                val call =
+                    ApiUtils.apiInterface.getAllSector(getRequestJSONBody(jsonObject.toString()))
 
                 call.enqueue(object : Callback<SectorListResponse> {
-                    override fun onResponse(call: Call<SectorListResponse>, response: Response<SectorListResponse>) {
+                    override fun onResponse(
+                        call: Call<SectorListResponse>, response: Response<SectorListResponse>
+                    ) {
 
                         if (response.code() == 200) {
                             LogUtil.e(TAG, "=====onResponse====")
@@ -714,7 +901,7 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
                             if (response.body()?.Status == 200) {
                                 hideProgress()
                                 arrSectorList = response.body()?.Data!!
-                                if(arrSectorList!!.size > 0) {
+                                if (arrSectorList!!.size > 0) {
                                     etDestination.performClick()
                                 } else {
                                     toast("No Value Available.", AppConstant.TOAST_SHORT)
@@ -750,15 +937,19 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
             dialogSelectInitial.setCancelable(true)
             dialogSelectInitial.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-            dialogSelectInitial.window!!.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            dialogSelectInitial.window!!.setLayout(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            )
             dialogSelectInitial.window!!.setGravity(Gravity.CENTER)
 
-            val rvDialogCustomer = dialogSelectInitial.findViewById(R.id.rvDialogCustomer) as RecyclerView
-            val edtSearchCustomer = dialogSelectInitial.findViewById(R.id.edtSearchCustomer) as EditText
+            val rvDialogCustomer =
+                dialogSelectInitial.findViewById(R.id.rvDialogCustomer) as RecyclerView
+            val edtSearchCustomer =
+                dialogSelectInitial.findViewById(R.id.edtSearchCustomer) as EditText
 
             val itemAdapter = DialogInitialAdapter(this, arrTypeList!!)
             itemAdapter.setRecyclerRowClick(object : RecyclerClickListener {
-                override fun onItemClickEvent(v:View, pos: Int, flag: Int) {
+                override fun onItemClickEvent(v: View, pos: Int, flag: Int) {
                     etType.setText(arrTypeList!![pos])
                     dialogSelectInitial!!.dismiss()
                 }
@@ -773,50 +964,52 @@ class DestinationDetailsActivity : BaseActivity(), View.OnClickListener, Recycle
         dialogMember!!.show()
     }
 
-    // region Get Tour Detail Api
-    private fun callTourMonthApi(tourid: Int) {
+    /*
+        // region Get Tour Detail Api
+        private fun callTourMonthApi(tourid: Int) {
 
-        val call = ApiUtils.apiInterface2.getTourDates(tourid)
-        call.enqueue(object : Callback<TourMonthResponse> {
-            override fun onResponse(call: Call<TourMonthResponse>, response: Response<TourMonthResponse>) {
-                if (response.code() == 200) {
-                    if (response.body()?.Status == 200) {
-                            arrMonthList.clear()
-                            arrMonthList = response.body()?.Data!![0].monthData!!
+            val call = ApiUtils.apiInterface2.getTourDates(tourid)
+            call.enqueue(object : Callback<TourMonthResponse> {
+                override fun onResponse(call: Call<TourMonthResponse>, response: Response<TourMonthResponse>) {
+                    if (response.code() == 200) {
+                        if (response.body()?.Status == 200) {
+                                arrMonthList.clear()
+                                arrMonthList = response.body()?.Data!![0].monthData!!
 
-                        Log.e("monthdata size","==>"+arrMonthList.size)
-                        if(arrMonthList.size > 0) {
-                            arrMonthList[0].isSelected = true
+                            Log.e("monthdata size","==>"+arrMonthList.size)
 
-                            monthadapter = MonthAdapter(this@DestinationDetailsActivity, arrMonthList,this@DestinationDetailsActivity)
-                            rvMonth.adapter = monthadapter
+                            if(arrMonthList.size > 0) {
+                                arrMonthList[0].isSelected = true
 
-                            arrDateList = ArrayList()
-                            arrDateList = arrMonthList[0].DateData!!
+                                monthadapter = MonthAdapter(this@DestinationDetailsActivity, arrMonthList,this@DestinationDetailsActivity)
+                                rvMonth.adapter = monthadapter
 
-                            if(arrDateList.size > 0) {
-                                dateadapter = DateAdapter(this@DestinationDetailsActivity, arrDateList)
-                                rvDate.adapter = dateadapter
-                                rvDate.visible()
-                            } else {
-                                rvDate.gone()
+                                arrDateList = ArrayList()
+                                arrDateList = arrMonthList[0].DateData!!
+
+                                if(arrDateList.size > 0) {
+                                    dateadapter = DateAdapter(this@DestinationDetailsActivity, arrDateList)
+                                    rvDate.adapter = dateadapter
+                                    rvDate.visible()
+                                } else {
+                                    rvDate.gone()
+                                }
+
                             }
-
                         }
                     }
                 }
-            }
-            override fun onFailure(call: Call<TourMonthResponse>, t: Throwable) {
-            }
-        })
-    }
-
+                override fun onFailure(call: Call<TourMonthResponse>, t: Throwable) {
+                }
+            })
+        }
+    */
     override fun onItemClickEvent(view: View, position: Int, type: Int) {
-        when(type) {
+        when (type) {
             1 -> {
                 val arrDateList = arrMonthList[position].DateData!!
 
-                if(arrDateList.size > 0) {
+                if (arrDateList.size > 0) {
                     dateadapter = DateAdapter(this@DestinationDetailsActivity, arrDateList)
                     rvDate.adapter = dateadapter
                     rvDate.visible()

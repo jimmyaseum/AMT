@@ -4,11 +4,14 @@ object AppConstant {
 
     var TOKEN : String = ""
 
-    val BASE_URL_APP = "http://38.17.55.183/amtapp2022/api/" //  AI005 development purpose
-    val BASE_URL_WEB = "http://38.17.55.183/amtapi2022/api/" //  AI005 development purpose
+//    val BASE_URL_APP = "http://amtapi.novotrips.com/api/" //  AI005 development purpose
+//    val BASE_URL_WEB = "https://amtcrm.ajaymoditravels.com/api/" //  AI005 development purpose
 
-//    val BASE_URL_APP = "http://amtapp.ajaymoditravels.com/api/" //  AI005 live purpose
-//    val BASE_URL_WEB = "https://amtcrm.ajaymoditravels.com/api/" //  AI005 live purpose
+//    val BASE_URL_APP = "http://68.64.173.183/amtapp2022/api/" //  AI005 development purpose
+//    val BASE_URL_WEB = "http://68.64.173.183/amtapi2022/api/" //  AI005 development purpose
+
+    val BASE_URL_APP = "https://webapi.ajaymoditravels.com/api/" //  AI005 live purpose
+    val BASE_URL_WEB = "https://amtcrm.ajaymoditravels.com/api/" //  AI005 live purpose
 
     val DEVICETYPE = 1
 
@@ -35,6 +38,9 @@ object AppConstant {
     const val EQUAL = "EQUAL"
 
     val SpecialityFilters = "SpecialityFilters"
+    val RoomTypeFilters = "RoomTypeFilters"
     val DurationFilters = "DurationFilters"
     val BudgetFilters = "BudgetFilters"
+    val MinFilters = "MinFilters"
+    val MaxFilters = "MaxFilters"
 }

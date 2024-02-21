@@ -11,6 +11,8 @@ data class SectorListModel (
     val RegionName: String?,
     @SerializedName("SectorName")
     val SectorName: String?,
+    @SerializedName("DestinationURL")
+    val DestinationURL: String? = null,
     @SerializedName("SectorType")
     val SectorType: String?,
     @SerializedName("Prefix")

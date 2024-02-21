@@ -7,13 +7,13 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'android-maven'
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.app.amtcust"
         minSdkVersion 21
-        targetSdkVersion 31
-        versionCode 9
-        versionName "1.9"
+        targetSdkVersion 33
+        versionCode 13
+        versionName "1.13"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
@@ -150,5 +150,7 @@ dependencies {
 
 //    implementation 'androidx.work:work-runtime-ktx:2.5.0'
 
+    // rangebar
+    implementation 'com.github.Innovattic:range-seek-bar:v1.0.8'
 
 }

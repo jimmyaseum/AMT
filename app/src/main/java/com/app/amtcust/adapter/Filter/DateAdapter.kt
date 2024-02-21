@@ -34,13 +34,13 @@ class DateAdapter(private val mContext: Context, private val arrData: ArrayList<
             model: DateDataModel) {
 
             if(model.TourDate != null) {
-                val mDay = convertDateStringToString(model.TourDate,"yyyy-MM-dd","EEE")
+                val mDay = convertDateStringToString(model.TourDate,"dd/MM/yyyy","EEE")
                 itemView.txtDay.text = mDay
 
-                val mDate = convertDateStringToString(model.TourDate,"yyyy-MM-dd","dd")
+                val mDate = convertDateStringToString(model.TourDate,"dd/MM/yyyy","dd")
                 itemView.txtDate.text = mDate
 
-                val mYear = convertDateStringToString(model.TourDate,"yyyy-MM-dd","yyyy")
+                val mYear = convertDateStringToString(model.TourDate,"dd/MM/yyyy","yyyy")
                 itemView.txtYear.text = mYear
 
             }

@@ -148,10 +148,4 @@ class GeneralInformationActivity : BaseActivity(),  View.OnClickListener {
             }
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        val userId = sharedPreference?.getPreferenceString(PrefConstants.PREF_USER_ID)!!.toInt()
-        callCustomerDetailApi(userId)
-    }
 }

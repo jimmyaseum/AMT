@@ -36,15 +36,20 @@ import java.util.ArrayList
 class DestinationListActivity : BaseActivity(), View.OnClickListener, RecyclerClickListener {
 
     var SpecialityFilters = ""
+    var RoomTypeFilters = ""
     var DurationFilters = ""
-    var BudgetFilters = ""
+    var MinFilters = "0"
+    var MaxFilters = "200000"
+//    var BudgetFilters = "Rate BETWEEN 0 AND 200000"
     var OrderBy = "ORDER BY Rate ASC"
     var Count = 0
     var Sortby_Name = "Price: Low To High"
 
     var redionId = ""
-    var sectorID = ""
-    var travelType = ""
+    var sectorURL = ""
+    var PageIndex = 1
+    var PageSize = 30
+    var tourType = ""
     var Himalayatrek = ""
     var IsSearch = ""
 
@@ -61,8 +66,8 @@ class DestinationListActivity : BaseActivity(), View.OnClickListener, RecyclerCl
 
     private fun getIntentData() {
         redionId = intent.getStringExtra("REGIONID").toString()
-        travelType = intent.getStringExtra("TRAVELTYPE").toString()
-        sectorID = intent.getStringExtra("SECTORID").toString()
+        tourType = intent.getStringExtra("TRAVELTYPE").toString()
+        sectorURL = intent.getStringExtra("SECTORURL").toString()
         Himalayatrek = intent.getStringExtra("HIMALAYATREK").toString()
         IsSearch = intent.getStringExtra("ISSEARCH").toString()
     }
@@ -111,9 +116,15 @@ class DestinationListActivity : BaseActivity(), View.OnClickListener, RecyclerCl
                 // Pass Intent filter activity
                 val intent = Intent(applicationContext, TourListFilterActivity::class.java)
 
+                Log.e("MinFilter put","===>"+MinFilters)
+                Log.e("MaxFilters put","===>"+MaxFilters)
+
                 intent.putExtra(AppConstant.SpecialityFilters, SpecialityFilters)
+                intent.putExtra(AppConstant.RoomTypeFilters, RoomTypeFilters)
                 intent.putExtra(AppConstant.DurationFilters, DurationFilters)
-                intent.putExtra(AppConstant.BudgetFilters, BudgetFilters)
+                intent.putExtra(AppConstant.MinFilters,MinFilters)
+                intent.putExtra(AppConstant.MaxFilters,MaxFilters)
+//                intent.putExtra(AppConstant.BudgetFilters, BudgetFilters)
                 startActivityForResult(intent, 1)
             }
             R.id.LL_Sort_By -> {
@@ -135,6 +146,7 @@ class DestinationListActivity : BaseActivity(), View.OnClickListener, RecyclerCl
             108 -> {
                 val intent = Intent(this, DestinationDetailsActivity::class.java)
                 intent.putExtra("TourID",arrTourDestinationList[position].ID)
+                intent.putExtra("TourURL",arrTourDestinationList[position].TourURL)
                 intent.putExtra("RateType",arrTourDestinationList[position].Ratetype)
                 intent.putExtra("NoOfNights",arrTourDestinationList[position].NoOfNights)
                 intent.putExtra("RoomTypeID",arrTourDestinationList[position].RoomTypeID)
@@ -149,6 +161,7 @@ class DestinationListActivity : BaseActivity(), View.OnClickListener, RecyclerCl
             109 -> {
                 val intent = Intent(this, DestinationDetailsActivity::class.java)
                 intent.putExtra("TourID",arrTourDestinationList[position].ID)
+                intent.putExtra("TourURL",arrTourDestinationList[position].TourURL)
                 intent.putExtra("RateType",arrTourDestinationList[position].Ratetype)
                 intent.putExtra("NoOfNights",arrTourDestinationList[position].NoOfNights)
                 intent.putExtra("RoomTypeID",arrTourDestinationList[position].RoomTypeID)
@@ -314,7 +327,6 @@ class DestinationListActivity : BaseActivity(), View.OnClickListener, RecyclerCl
         dialogMember!!.show()
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -325,9 +337,15 @@ class DestinationListActivity : BaseActivity(), View.OnClickListener, RecyclerCl
                 1 -> {
 
                     SpecialityFilters = data!!.getStringExtra(AppConstant.SpecialityFilters).toString()
+                    RoomTypeFilters = data!!.getStringExtra(AppConstant.RoomTypeFilters).toString()
                     DurationFilters = data.getStringExtra(AppConstant.DurationFilters).toString()
-                    BudgetFilters = data.getStringExtra(AppConstant.BudgetFilters).toString()
+                    MinFilters = data.getStringExtra(AppConstant.MinFilters).toString()
+                    MaxFilters = data.getStringExtra(AppConstant.MaxFilters).toString()
+//                    BudgetFilters = data.getStringExtra(AppConstant.BudgetFilters).toString()
                     Count = data.getIntExtra("Count",0)
+
+                    Log.e("MinFilter get","===>"+MinFilters)
+                    Log.e("MaxFilters get","===>"+MaxFilters)
 
                     tvFilterCount.text = "" + Count +" Selected"
 
@@ -463,31 +481,89 @@ class DestinationListActivity : BaseActivity(), View.OnClickListener, RecyclerCl
 
     private fun CallGetTourDestinationListAPI() {
         launchProgress()
-        repo.getTourDestinationList(redionId, travelType, Himalayatrek, sectorID, BudgetFilters, DurationFilters, SpecialityFilters, OrderBy, IsSearch, listners = ResponseListner {
 
-            if (it.status) {
-                if (it.data?.Status == 200) {
-                    arrTourDestinationList.clear()
-                    arrTourDestinationList = it.data?.Data!!
+        val budgetfilter = "Rate BETWEEN "+ MinFilters +" AND " + MaxFilters
 
-                    if(arrTourDestinationList.size > 0) {
-                        rvDestinationList.adapter = DestinationListAdapter(this, arrTourDestinationList,this)
-                        swipeRefreshDestination.isRefreshing = false
+        if (intent.getBooleanExtra("ISCOUPLETOUR", false) == true) {
+            repo.getCoupleTourDestinationList(
+                redionId,
+                RoomTypeFilters,
+                Himalayatrek,
+                budgetfilter,
+                DurationFilters,
+                SpecialityFilters,
+                OrderBy,
+                IsSearch,
+                sectorURL,
+                PageIndex,
+                PageSize,
+                listners = ResponseListner {
+
+                    if (it.status) {
+                        if (it.data?.Status == 200) {
+                            arrTourDestinationList.clear()
+                            arrTourDestinationList = it.data?.Data!!
+
+                            if (arrTourDestinationList.size > 0) {
+                                rvDestinationList.adapter =
+                                    DestinationListAdapter(this, arrTourDestinationList, this)
+                                swipeRefreshDestination.isRefreshing = false
+                            }
+                            showHideDesignView(1)
+                            disposeProgress()
+                        } else if (it.data?.Status == 1010 || it.data?.Status == 201) {
+                            arrTourDestinationList?.clear()
+                            rvDestinationList.adapter?.notifyDataSetChanged()
+                            swipeRefreshDestination.isRefreshing = false
+                            disposeProgress()
+                            showHideDesignView(2)
+                        }
+                    } else {
+                        disposeProgress()
+                        it.message.toast(this)
                     }
-                    showHideDesignView(1)
-                    disposeProgress()
-                } else if (it.data?.Status  == 1010 ||  it.data?.Status  == 201) {
-                    arrTourDestinationList?.clear()
-                    rvDestinationList.adapter?.notifyDataSetChanged()
-                    swipeRefreshDestination.isRefreshing = false
-                    disposeProgress()
-                    showHideDesignView(2)
-                }
-            } else {
-                disposeProgress()
-                it.message.toast(this)
-            }
-        })
+                })
+        } else {
+
+            repo.getTourDestinationList(
+                redionId,
+                RoomTypeFilters,
+                Himalayatrek,
+                budgetfilter,
+                DurationFilters,
+                SpecialityFilters,
+                OrderBy,
+                IsSearch,
+                sectorURL,
+                PageIndex,
+                PageSize,
+                listners = ResponseListner {
+
+                    if (it.status) {
+                        if (it.data?.Status == 200) {
+                            arrTourDestinationList.clear()
+                            arrTourDestinationList = it.data?.Data!!
+
+                            if (arrTourDestinationList.size > 0) {
+                                rvDestinationList.adapter =
+                                    DestinationListAdapter(this, arrTourDestinationList, this)
+                                swipeRefreshDestination.isRefreshing = false
+                            }
+                            showHideDesignView(1)
+                            disposeProgress()
+                        } else if (it.data?.Status == 1010 || it.data?.Status == 201) {
+                            arrTourDestinationList?.clear()
+                            rvDestinationList.adapter?.notifyDataSetChanged()
+                            swipeRefreshDestination.isRefreshing = false
+                            disposeProgress()
+                            showHideDesignView(2)
+                        }
+                    } else {
+                        disposeProgress()
+                        it.message.toast(this)
+                    }
+                })
+        }
     }
 
 

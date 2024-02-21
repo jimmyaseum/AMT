@@ -1,5 +1,6 @@
 package com.app.amtcust.model.response
 
+import com.app.amtcust.model.AttachmentModel
 import com.google.gson.annotations.SerializedName
 
 data class TourDetailsResponse(
@@ -29,10 +30,14 @@ data class TourDetailsModel (
     val RateType: String?,
     @SerializedName("touCities")
     val touCities: ArrayList<CityData>? = null,
+    @SerializedName("tourDocuments")
+    var tourDocuments: ArrayList<AttachmentModel> = arrayListOf(),
     @SerializedName("tourfacilities")
     val toufacility: ArrayList<Facility>? = null,
     @SerializedName("images")
     val TourImages: ArrayList<TourImages>? = null,
+    @SerializedName("tourdates")
+    val tourdates: ArrayList<MonthDataModel>? = null,
 //    @SerializedName("toudate")
 //    val Toudate: ArrayList<TourDates>? = null,
     @SerializedName("tourcost")
@@ -46,7 +51,14 @@ data class TourDetailsModel (
     @SerializedName("Inclusions")
     val Inclusions: String?,
     @SerializedName("Exclusions")
-    val Exclusions: String?
+    val Exclusions: String?,
+    @SerializedName("TourCities")
+    val TourCities: String?,
+
+    @SerializedName("PdfPath")
+    val PdfPath: String? = null
+
+
 
 )
 
@@ -118,6 +130,5 @@ data class CityData (
     val CityName: String?,
     @SerializedName("NoOfNights")
     val NoOfNights: Int?
-    )
-
+)
 

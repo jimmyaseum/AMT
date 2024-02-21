@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.app.amtcust.R
 import com.app.amtcust.interFase.RecyclerClickListener
+import com.app.amtcust.model.response.TourDestinationListModel
 import com.app.amtcust.model.response.TourListModel
 import com.app.amtcust.utils.loadUrlRoundedCorner2
 import kotlinx.android.synthetic.main.adapter_tours.view.LLPlaces
 import kotlinx.android.synthetic.main.adapter_tours.view.img
 import kotlinx.android.synthetic.main.adapter_tours.view.txtName
 
-class ToursAdapter(val context: Context?, private val arrData: ArrayList<TourListModel>, val recyclerClickListener: RecyclerClickListener) : RecyclerView.Adapter<ToursAdapter.ViewHolder>() {
+class ToursAdapter(val context: Context?, private val arrData: ArrayList<TourDestinationListModel>, val recyclerClickListener: RecyclerClickListener) : RecyclerView.Adapter<ToursAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -36,7 +37,7 @@ class ToursAdapter(val context: Context?, private val arrData: ArrayList<TourLis
         fun bindItems(
             context: Context,
             position: Int,
-            model: ArrayList<TourListModel>,
+            model: ArrayList<TourDestinationListModel>,
             recyclerClickListener: RecyclerClickListener
         ) {
             this.context = context
